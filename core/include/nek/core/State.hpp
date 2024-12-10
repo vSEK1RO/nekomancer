@@ -18,12 +18,12 @@ namespace nek::core
         using Watcher = std::function<void(const T &, const T &)>;
 
         /**
-         * set default and value = default
+         * Constructs object with passed default and value = default
          */
         State(const T &default_) noexcept
             : State(default_, default_) {};
         /**
-         * set default and value
+         * Constructs object with passed default and value
          */
         State(const T &default_, const T &value) noexcept
             : _default(default_), _value(value) {};
@@ -32,8 +32,9 @@ namespace nek::core
          * if Reactive::do_track = true, will be added to Reactive::tracked set after call
          * @return value of this state
          */
-        T get() const noexcept
+        const T &get() const
         {
+            trackSelf();
             return _value;
         }
         /**

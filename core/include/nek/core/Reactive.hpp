@@ -1,5 +1,6 @@
 #pragma once
 
+#include <unordered_set>
 #include <functional>
 #include <vector>
 
@@ -38,9 +39,27 @@ namespace nek::core
 
     protected:
         /**
+         * flag that tells other reactives that when the state changes they need to be added to tracked
+         */
+        thread_local inline static bool do_track = false;
+        /**
+         * set of unique reactives whose state was changed while do_track flag was true
+         */
+        thread_local inline static std::unordered_set<Reactive *> tracked = {};
+
+        /**
          * calls every watcher with copy passed params
          */
         void notify() const;
+        /**
+         * adds this reactive to "tracked" set if flag do_track was set true
+         */
+        void trackSelf() const;
+        /**
+         * adds passed watcher to every tracked reactive
+         * @return vector of references to added watcher for every tracked reactive
+         */
+        static std::vector<const Watcher *> watchTracked(const Watcher &watcher);
 
     private:
         std::vector<Watcher> _watchers = {};
@@ -49,6 +68,6 @@ namespace nek::core
          * compares address of passed reference and addresses in object's watchers inner storage
          * @return iterator of found watcher
          */
-        std::vector<Reactive::Watcher>::const_iterator _find(const Watcher &watcher) const noexcept;
+        std::vector<Watcher>::const_iterator _find(const Watcher &watcher) const noexcept;
     };
 }

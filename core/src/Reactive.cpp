@@ -11,7 +11,8 @@ namespace nek::core
         {
             throw Exception(Exception::ALREADY_WATCHED);
         }
-        return watch(std::move(watcher));
+        _watchers.push_back(watcher);
+        return *_watchers.rbegin();
     }
 
     const Reactive::Watcher &Reactive::watch(Watcher &&watcher)
@@ -38,6 +39,26 @@ namespace nek::core
         {
             watcher();
         }
+    }
+
+    void Reactive::trackSelf() const
+    {
+        if (do_track)
+        {
+            tracked.insert(const_cast<Reactive *>(this));
+        }
+    }
+
+    std::vector<const Reactive::Watcher *> Reactive::watchTracked(const Watcher &watcher)
+    {
+        std::vector<const Reactive::Watcher *> watchers;
+        watchers.reserve(tracked.size());
+        for (Reactive *ptr : tracked)
+        {
+            watchers.push_back(&ptr->watch(watcher));
+        }
+        tracked.clear();
+        return watchers;
     }
 
     std::vector<Reactive::Watcher>::const_iterator Reactive::_find(const Watcher &watcher) const noexcept

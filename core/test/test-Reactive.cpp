@@ -35,4 +35,30 @@ namespace ENTRY
         EXPECT_FALSE(notified);
         EXPECT_NO_THROW(a.unwatch(unwatched));
     }
+
+    struct B : public Reactive
+    {
+        void trackEnable() const
+        {
+            Reactive::do_track = true;
+        }
+        void watchTracked(bool &notified) const
+        {
+            Reactive::watchTracked([&]()
+                                   { notified = true; });
+        }
+    };
+
+    TEST(ENTRY, trackSelf_watchTracked)
+    {
+        B b;
+        State<int> a = 0;
+        bool notified = false;
+
+        b.trackEnable();
+        a.get();
+        b.watchTracked(notified);
+        a.set(1);
+        EXPECT_TRUE(notified);
+    }
 }
