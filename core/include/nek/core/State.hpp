@@ -1,7 +1,6 @@
 #pragma once
 
 #include <nek/core/Reactive.hpp>
-#include <json/json.h>
 
 namespace nek::core
 {
