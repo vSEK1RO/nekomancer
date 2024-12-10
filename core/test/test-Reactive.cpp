@@ -32,9 +32,10 @@ namespace ENTRY
         EXPECT_TRUE(notified);
         EXPECT_ANY_THROW(a.watch(watcher));
 
-        a.unwatch(watcher);
+        auto unwatched = a.unwatch(watcher);
         notified = false;
         a.set(0);
         EXPECT_FALSE(notified);
+        EXPECT_NO_THROW(a.unwatch(unwatched));
     }
 }

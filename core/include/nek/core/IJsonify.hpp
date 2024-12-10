@@ -5,6 +5,9 @@
 
 namespace nek::core
 {
+    /**
+     * interface for json serializing features
+     */
     struct IJsonify
     {
         virtual IJsonify &from(const Json::Value &json) = 0;
