@@ -25,6 +25,7 @@ target_include_directories(
     nek-core-test
     PRIVATE
     ../include
+    .
 )
 target_link_libraries(
     nek-core-test

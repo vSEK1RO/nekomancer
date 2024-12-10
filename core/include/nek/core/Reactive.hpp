@@ -29,6 +29,7 @@ namespace nek::core
         const Watcher &watch(Watcher &&watcher);
         /**
          * removes function from object's watchers inner storage
+         * @param watcher reference to added watcher, which was returned by watch()
          * @return removed function if watcher existed, else copy passed watcher
          */
         Watcher unwatch(const Watcher &watcher) noexcept;

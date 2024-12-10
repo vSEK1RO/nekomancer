@@ -1,7 +1,4 @@
-#include <nek/core.hpp>
-
-using namespace nek::core;
-
+#include <test.hpp>
 #undef ENTRY
 #define ENTRY nek_core_Reactive
 
