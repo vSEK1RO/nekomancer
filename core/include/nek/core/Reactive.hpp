@@ -3,6 +3,7 @@
 #include <unordered_set>
 #include <functional>
 #include <vector>
+#include <utility>
 
 namespace nek::core
 {
@@ -59,7 +60,7 @@ namespace nek::core
          * adds passed watcher to every tracked reactive
          * @return vector of references to added watcher for every tracked reactive
          */
-        static std::vector<const Watcher *> watchTracked(const Watcher &watcher);
+        static std::vector<std::pair<const Watcher *, Reactive *>> watchTracked(const Watcher &watcher);
 
     private:
         std::vector<Watcher> _watchers = {};

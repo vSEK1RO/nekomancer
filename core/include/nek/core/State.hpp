@@ -33,7 +33,7 @@ namespace nek::core
          */
         const T &get() const
         {
-            trackSelf();
+            Reactive::trackSelf();
             return _value;
         }
         /**
@@ -42,8 +42,15 @@ namespace nek::core
          */
         State &set(const T &value)
         {
-            _value = value;
-            notify();
+            if (_value != value)
+            {
+                _value = value;
+                Reactive::notify();
+            }
+            else
+            {
+                _value = value;
+            }
             return *this;
         }
         /**
@@ -52,9 +59,7 @@ namespace nek::core
          */
         State &reset() noexcept
         {
-            _value = _default;
-            notify();
-            return *this;
+            return set(_default);
         }
         /**
          * creates type-independent watcher-wrapper () => void { watcher(old_value, value) } and watches itself by Reactive::watch

@@ -49,15 +49,16 @@ namespace nek::core
         }
     }
 
-    std::vector<const Reactive::Watcher *> Reactive::watchTracked(const Watcher &watcher)
+    std::vector<std::pair<const Reactive::Watcher *, Reactive *>> Reactive::watchTracked(const Watcher &watcher)
     {
-        std::vector<const Reactive::Watcher *> watchers;
+        std::vector<std::pair<const Reactive::Watcher *, Reactive *>> watchers;
         watchers.reserve(tracked.size());
         for (Reactive *ptr : tracked)
         {
-            watchers.push_back(&ptr->watch(watcher));
+            watchers.push_back(std::pair(&ptr->watch(watcher), ptr));
         }
         tracked.clear();
+        do_track = false;
         return watchers;
     }
 

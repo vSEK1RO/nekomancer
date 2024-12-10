@@ -30,8 +30,11 @@ TEST(ENTRY, watch_unwatch)
     a.reset();
     EXPECT_TRUE(notified && _old_value == 1 && _value == 0);
 
-    auto unwatched = a.unwatch(watcher);
     notified = false;
+    a.reset();
+    EXPECT_FALSE(notified);
+
+    auto unwatched = a.unwatch(watcher);
     a.set(1);
     EXPECT_FALSE(notified);
     EXPECT_NO_THROW(a.unwatch(unwatched));

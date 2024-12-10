@@ -10,7 +10,7 @@ namespace ENTRY
         A() = default;
         int set(int v)
         {
-            notify();
+            Reactive::notify();
             this->v = v;
             return v;
         }
