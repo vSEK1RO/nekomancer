@@ -6,6 +6,7 @@ namespace nek::core
 {
     const std::unordered_map<Exception::Code, std::string> Exception::messages = {
         {Code::PARSE_JSON, "exception during parsing json"},
+        {Code::ALREADY_WATCHED, "this Reactive already watched by passed function / lambda"},
     };
     Exception::Exception(Code code, std::string_view description, const std::source_location &location)
     {

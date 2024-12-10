@@ -14,6 +14,7 @@ namespace nek::core
         enum Code
         {
             PARSE_JSON,
+            ALREADY_WATCHED,
         };
         static const std::unordered_map<Code, std::string> messages;
 

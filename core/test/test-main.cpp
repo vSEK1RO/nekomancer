@@ -1,5 +1,4 @@
 #include <gtest/gtest.h>
 
-#define PACKAGE nek_core
-
 #include "test-IJsonify.cpp"
+#include "test-Reactive.cpp"
