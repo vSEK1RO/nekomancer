@@ -7,13 +7,13 @@ using namespace nek::core;
 
 namespace ENTRY
 {
-    class A : public Reactive<int>
+    class A : public Reactive
     {
     public:
         A() = default;
         int set(int v)
         {
-            notify(this->v, v);
+            notify();
             this->v = v;
             return v;
         }
@@ -26,7 +26,7 @@ namespace ENTRY
     {
         A a;
         bool notified = false;
-        auto &watcher = a.watch([&notified](auto, auto)
+        auto &watcher = a.watch([&notified]()
                                 { notified = true; });
         a.set(1);
         EXPECT_TRUE(notified);

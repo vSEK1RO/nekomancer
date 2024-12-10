@@ -20,6 +20,7 @@ add_library(
     nek-core
     SHARED
     IJsonify.cpp
+    Reactive.cpp
     Exception.cpp
 )
 target_link_libraries(
