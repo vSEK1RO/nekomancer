@@ -16,6 +16,7 @@ TEST(ENTRY, constructor_get_set_reset)
         EXPECT_EQ(s.reset().get(), 1);
     }
 }
+
 TEST(ENTRY, watch_unwatch)
 {
     State<int> a = 0;
@@ -43,4 +44,64 @@ TEST(ENTRY, watch_unwatch)
     a.set(1);
     EXPECT_FALSE(notified);
     EXPECT_NO_THROW(a.unwatch(unwatched));
+}
+
+TEST(ENTRY, IJsonable)
+{
+    {
+        State<int> a(Json::parse(R"({
+            "default": 1,
+            "value": 2
+        })"));
+        EXPECT_EQ(a.get(), 2);
+        EXPECT_EQ(a.reset().get(), 1);
+    }
+    {
+        struct A : IJsonable
+        {
+            std::vector<int> v;
+
+            A() = default;
+            A(const Json::Value &json)
+            {
+                from(json);
+            }
+            bool operator==(const A &rhs) const noexcept
+            {
+                if (v.size() != rhs.v.size())
+                {
+                    return false;
+                }
+                for (size_t i = 0; i < v.size(); i++)
+                {
+                    if (v[i] != rhs.v[i])
+                    {
+                        return false;
+                    }
+                }
+                return true;
+            }
+            A &from(const Json::Value &json)
+            {
+                v = Json::to<std::vector<int>>(json.at("v"));
+                return *this;
+            }
+            Json::Value toJson() const noexcept
+            {
+                Json::Value json;
+                json["v"] = Json::from<std::vector<int>>(v);
+                return json;
+            }
+        };
+        State<A> a(Json::parse(R"({
+            "default": {
+                "v": [1]
+            },
+            "value": {
+                "v": []
+            }
+        })"));
+        EXPECT_EQ(a.get().v.size(), 0);
+        EXPECT_EQ(a.reset().get().v[0], 1);
+    }
 }

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <nek/core/Reactive.hpp>
+#include <nek/core/Json.hpp>
 
 namespace nek::core
 {
@@ -8,7 +9,7 @@ namespace nek::core
      * reactive object, which stores value: T, default: T
      */
     template <typename T>
-    class State : public Reactive
+    class State : public Reactive, public IJsonable
     {
     public:
         /**
@@ -26,6 +27,14 @@ namespace nek::core
          */
         State(const T &default_, const T &value) noexcept
             : _default(default_), _value(value) {};
+        /**
+         * Constructs object from json: { default: T, value?: T }
+         * @throw Exception::PROPERTY_JSON if doesn't have "default" property
+         */
+        State(const Json::Value &json)
+        {
+            from(json);
+        }
 
         /**
          * this operation may be tracked by other reactives
@@ -78,6 +87,37 @@ namespace nek::core
         const Reactive::Watcher &watch(const Reactive::Watcher &watcher)
         {
             return Reactive::watch(watcher);
+        }
+        /**
+         * sets object properties from json: { default: T, value?: T }
+         * @throw Exception::PROPERTY_JSON if doesn't have "default" property
+         */
+        IJsonable &from(const Json::Value &json) override
+        {
+            if (!json.contains("default"))
+            {
+                throw Exception(Exception::PROPERTY_JSON, "default");
+            }
+            _default = Json::to<T>(json["default"]);
+            if (json.contains("value"))
+            {
+                _value = Json::to<T>(json["value"]);
+            }
+            else
+            {
+                _value = _default;
+            }
+            return *this;
+        }
+        /**
+         * converts object to json: { default: T, value: T }
+         */
+        Json::Value toJson() const noexcept override
+        {
+            Json::Value json;
+            json["default"] = Json::from<T>(_default);
+            json["value"] = Json::from<T>(_value);
+            return json;
         }
 
     private:
