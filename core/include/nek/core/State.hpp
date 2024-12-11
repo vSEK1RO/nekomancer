@@ -28,7 +28,7 @@ namespace nek::core
             : _default(default_), _value(value) {};
 
         /**
-         * if Reactive::do_track = true, will be added to Reactive::tracked set after call
+         * this operation may be tracked by other reactives
          * @return value of this state
          */
         const T &get() const
