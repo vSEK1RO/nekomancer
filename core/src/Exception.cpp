@@ -6,6 +6,9 @@ namespace nek::core
 {
     const std::unordered_map<Exception::Code, std::string> Exception::messages = {
         {Code::PARSE_JSON, "exception during parsing json"},
+        {Code::PROPERTY_JSON, "json doesn't have the following properties"},
+        {Code::PROPERTY_TYPE_JSON, "json property cannot be converted to object"},
+        {Code::OBJECT_TYPE_JSON, "object cannot be converted to json property"},
         {Code::ALREADY_WATCHED, "this Reactive already watched by passed function / lambda"},
     };
     Exception::Exception(Code code, std::string_view description, const std::source_location &location)

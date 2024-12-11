@@ -2,31 +2,31 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-result -O2")
 
 include(FetchContent)
 
-find_package(jsoncpp QUIET)
-if (NOT jsoncpp_FOUND)
-    message(STATUS "jsoncpp not found, fetching...")
+find_package(nlohmann_json QUIET)
+if (NOT nlohmann_json_FOUND)
+    message(STATUS "nlohmann_json not found, fetching...")
     include(FetchContent)
     FetchContent_Declare(
-        jsoncpp
-        GIT_REPOSITORY https://github.com/open-source-parsers/jsoncpp.git
-        GIT_TAG        1.9.6
+        nlohmann_json
+        GIT_REPOSITORY https://github.com/nlohmann/json.git
+        GIT_TAG        v3.11.3
     )
-    FetchContent_MakeAvailable(jsoncpp)
+    FetchContent_MakeAvailable(nlohmann_json)
 else()
-    message(STATUS "Found jsoncpp")
+    message(STATUS "Found nlohmann_json")
 endif()
 
 add_library(
     nek-core
     SHARED
-    IJsonify.cpp
     Reactive.cpp
     Exception.cpp
+    Json.cpp
 )
 target_link_libraries(
     nek-core
     PUBLIC
-    jsoncpp_lib
+    nlohmann_json
 )
 target_include_directories(
     nek-core
