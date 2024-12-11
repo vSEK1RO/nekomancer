@@ -68,9 +68,8 @@ namespace nek::core
          */
         const Reactive::Watcher &watch(const Watcher &watcher)
         {
-            return Reactive::watch([this, watcher]()
+            return Reactive::watch([this, watcher, old_value = _value]() mutable
                                    {
-                static T old_value = _default;
                 watcher(old_value, _value);
                 old_value = _value; });
         }

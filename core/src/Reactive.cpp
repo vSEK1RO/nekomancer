@@ -51,6 +51,7 @@ namespace nek::core
 
     std::vector<std::pair<const Reactive::Watcher *, Reactive *>> Reactive::watchTracked(const Watcher &watcher)
     {
+        do_track = false;
         std::vector<std::pair<const Reactive::Watcher *, Reactive *>> watchers;
         watchers.reserve(tracked.size());
         for (Reactive *ptr : tracked)
@@ -58,7 +59,6 @@ namespace nek::core
             watchers.push_back(std::pair(&ptr->watch(watcher), ptr));
         }
         tracked.clear();
-        do_track = false;
         return watchers;
     }
 

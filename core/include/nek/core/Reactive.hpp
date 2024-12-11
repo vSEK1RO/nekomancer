@@ -18,6 +18,8 @@ namespace nek::core
          */
         using Watcher = std::function<void()>;
 
+        Reactive(const Reactive &) = delete;
+        Reactive &operator=(const Reactive &) = delete;
         /**
          * copies passed function into object's watchers inner storage
          * @return reference to added watcher, which may be passed into unwatch later
@@ -48,6 +50,7 @@ namespace nek::core
          */
         thread_local inline static std::unordered_set<Reactive *> tracked = {};
 
+        Reactive() = default;
         /**
          * calls every watcher with copy passed params
          */
