@@ -13,7 +13,7 @@ namespace nek::core
     {
     public:
         /**
-         * type of computation function. all reactives used in it will be watched by this computed 
+         * type of computation function. all reactives used in it will be watched by this computed
          */
         using Computer = std::function<T()>;
         /**
@@ -29,6 +29,8 @@ namespace nek::core
             _value = (State<T> *)operator new(sizeof(State<T>));
             Reactive::do_track = true;
             new (_value) State<T>(computer());
+            _value->watch([this]()
+                          { Reactive::notify(); });
             _watchers = Reactive::watchTracked([this, computer]()
                                                { _value->set(computer()); });
         }

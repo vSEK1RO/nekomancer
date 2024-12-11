@@ -47,10 +47,6 @@ namespace nek::core
                 _value = value;
                 Reactive::notify();
             }
-            else
-            {
-                _value = value;
-            }
             return *this;
         }
         /**

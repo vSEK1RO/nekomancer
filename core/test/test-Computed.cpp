@@ -34,6 +34,20 @@ TEST(ENTRY, constructor_watch_unwatch)
     EXPECT_FALSE(notified);
 }
 
+TEST(ENTRY, Reactive_watch)
+{
+    State<uint32_t> a = 2;
+    State<int> b = 2;
+    Computed<uint64_t> c([&]()
+                         { return a.get() * b.get(); });
+
+    bool notified = false;
+    c.Reactive::watch([&notified]()
+                      { notified = true; });
+    a.set(4);
+    EXPECT_TRUE(notified);
+}
+
 TEST(ENTRY, destructor)
 {
     State<int> s = 2;
