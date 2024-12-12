@@ -28,7 +28,16 @@ namespace nek::core
         {
             _value = (State<T> *)operator new(sizeof(State<T>));
             Reactive::do_track = true;
-            new (_value) State<T>(computer());
+            try
+            {
+                new (_value) State<T>(computer());
+            }
+            catch (...)
+            {
+                Reactive::do_track = false;
+                operator delete(_value);
+                throw;
+            }
             _value->watch([this]()
                           { Reactive::notify(); });
             _watchers = Reactive::watchTracked([this, computer]()

@@ -11,6 +11,8 @@ TEST(ENTRY, constructor_watch_unwatch)
     EXPECT_EQ(c.get(), 4);
     a.set(4);
     EXPECT_EQ(c.get(), 8);
+    EXPECT_ANY_THROW(Computed<int>([&]()
+                                   { throw std::logic_error("incomputed"); return 1; }));
 
     bool notified = false;
     uint64_t _old_value = 0, _value = 0;
