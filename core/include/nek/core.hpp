@@ -2,4 +2,5 @@
 #include "core/Reactive.hpp"
 #include "core/State.hpp"
 #include "core/Computed.hpp"
+#include "core/Property.hpp"
 #include "core/Json.hpp"
