@@ -36,7 +36,7 @@ namespace nek::core
          * @param watcher reference to added watcher, which was returned by watch()
          * @return removed function if watcher existed, else copy passed watcher
          */
-        Watcher unwatch(const Watcher &watcher) noexcept;
+        Watcher unwatch(const Watcher &watcher)
 
         virtual ~Reactive() = default;
 

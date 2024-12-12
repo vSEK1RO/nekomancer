@@ -21,7 +21,7 @@ namespace nek::core
         return *_watchers.rbegin();
     }
 
-    Reactive::Watcher Reactive::unwatch(const Watcher &watcher) noexcept
+    Reactive::Watcher Reactive::unwatch(const Watcher &watcher)
     {
         auto w_it = _find(watcher);
         if (w_it == _watchers.end())
