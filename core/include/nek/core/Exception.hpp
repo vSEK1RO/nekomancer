@@ -18,6 +18,7 @@ namespace nek::core
             PROPERTY_TYPE_JSON,
             OBJECT_TYPE_JSON,
             ALREADY_WATCHED,
+            PROPERTY_UNINITIALIZED,
         };
         static const std::unordered_map<Code, std::string> messages;
 
