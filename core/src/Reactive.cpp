@@ -1,7 +1,6 @@
 #include <nek/core/Reactive.hpp>
 
 #include <algorithm>
-#include <nek/core/Exception.hpp>
 
 namespace nek::core
 {
@@ -19,22 +18,6 @@ namespace nek::core
     void Reactive::swap(Reactive &rhs) noexcept
     {
         std::swap(_watchers, rhs._watchers);
-    }
-
-    const Reactive::Watcher &Reactive::watch(const Watcher &watcher)
-    {
-        if (_find(watcher) != _watchers.end())
-        {
-            throw Exception(Exception::ALREADY_WATCHED);
-        }
-        _watchers.push_back(watcher);
-        return *_watchers.rbegin();
-    }
-
-    const Reactive::Watcher &Reactive::watch(Watcher &&watcher)
-    {
-        _watchers.push_back(std::move(watcher));
-        return *_watchers.rbegin();
     }
 
     Reactive::Watcher Reactive::unwatch(const Watcher &watcher)

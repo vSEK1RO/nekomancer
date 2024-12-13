@@ -4,6 +4,7 @@
 #include <functional>
 #include <vector>
 #include <utility>
+#include <nek/core/Exception.hpp>
 
 namespace nek::core
 {
@@ -33,16 +34,20 @@ namespace nek::core
         void swap(Reactive &rhs) noexcept;
 
         /**
-         * copies passed function into object's watchers inner storage
+         * adds passed function into object's watchers inner storage
          * @return reference to added watcher, which may be passed into unwatch later
          * @exception Exception::ALREADY_WATCHED if this object already watched by passed function reference
          */
-        const Watcher &watch(const Watcher &watcher);
-        /**
-         * moves passed function into object's watchers inner storage
-         * @return reference to added watcher, which may be passed into unwatch later
-         */
-        const Watcher &watch(Watcher &&watcher);
+        template <std::common_reference_with<Watcher> U>
+        const Watcher &watch(U &&watcher)
+        {
+            if (_find(watcher) != _watchers.end())
+            {
+                throw Exception(Exception::ALREADY_WATCHED);
+            }
+            _watchers.push_back(std::forward<U>(watcher));
+            return *_watchers.rbegin();
+        }
         /**
          * removes function from object's watchers inner storage
          * @param watcher reference to added watcher, which was returned by watch()
