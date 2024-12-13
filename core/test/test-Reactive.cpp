@@ -19,6 +19,15 @@ namespace ENTRY
         int v = 0;
     };
 
+    TEST(ENTRY, move)
+    {
+        Reactive a;
+        auto &watcher = a.watch([](){});
+        Reactive b(std::move(a));
+        EXPECT_ANY_THROW(a.unwatch(watcher));
+        EXPECT_NO_THROW(b.unwatch(watcher));
+    }
+
     TEST(ENTRY, watch_unwatch)
     {
         A a;
@@ -34,7 +43,7 @@ namespace ENTRY
         notified = false;
         a.set(0);
         EXPECT_FALSE(notified);
-        EXPECT_NO_THROW(a.unwatch(unwatched));
+        EXPECT_ANY_THROW(a.unwatch(unwatched));
     }
 
     struct B : public Reactive

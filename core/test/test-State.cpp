@@ -43,7 +43,7 @@ TEST(ENTRY, watch_unwatch)
     auto unwatched = a.unwatch(watcher);
     a.set(1);
     EXPECT_FALSE(notified);
-    EXPECT_NO_THROW(a.unwatch(unwatched));
+    EXPECT_ANY_THROW(a.unwatch(unwatched));
 }
 
 TEST(ENTRY, IJsonable)

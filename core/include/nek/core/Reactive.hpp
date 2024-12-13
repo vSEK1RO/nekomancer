@@ -25,7 +25,8 @@ namespace nek::core
         /**
          * Constructs object from moved
          */
-        Reactive(Reactive &&rhs) noexcept;
+        Reactive(Reactive &&rhs) noexcept
+            : _watchers(std::exchange(rhs._watchers, {})) {};
         /**
          * moves passed object into it
          * @return *this
@@ -36,7 +37,7 @@ namespace nek::core
         /**
          * adds passed function into object's watchers inner storage
          * @return reference to added watcher, which may be passed into unwatch later
-         * @exception Exception::ALREADY_WATCHED if this object already watched by passed function reference
+         * @throw Exception::ALREADY_WATCHED if this object already watched by passed function reference
          */
         template <std::common_reference_with<Watcher> U>
         const Watcher &watch(U &&watcher)
@@ -51,7 +52,8 @@ namespace nek::core
         /**
          * removes function from object's watchers inner storage
          * @param watcher reference to added watcher, which was returned by watch()
-         * @return removed function if watcher existed, else copy passed watcher
+         * @return removed function if watcher existed
+         * @throw Exception::NOT_WATCHED if this object isn't watched by passed function reference
          */
         Watcher unwatch(const Watcher &watcher);
         /**

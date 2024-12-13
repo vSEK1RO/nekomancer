@@ -18,6 +18,7 @@ namespace nek::core
             PROPERTY_TYPE_JSON,
             OBJECT_TYPE_JSON,
             ALREADY_WATCHED,
+            NOT_WATCHED,
             PROPERTY_INITIALIZED,
             PROPERTY_UNINITIALIZED,
         };

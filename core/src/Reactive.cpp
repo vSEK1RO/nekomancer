@@ -4,14 +4,10 @@
 
 namespace nek::core
 {
-    Reactive::Reactive(Reactive &&rhs) noexcept
-    {
-        swap(rhs);
-    }
-
     Reactive &Reactive::operator=(Reactive &&rhs) noexcept
     {
-        swap(rhs);
+        Reactive temp(std::move(rhs));
+        swap(temp);
         return *this;
     }
 
@@ -25,9 +21,9 @@ namespace nek::core
         auto w_it = _find(watcher);
         if (w_it == _watchers.end())
         {
-            return watcher;
+            throw Exception(Exception::NOT_WATCHED);
         }
-        Watcher unwatched = *w_it;
+        Watcher unwatched(std::move(*w_it));
         try
         {
             _watchers.erase(w_it);
