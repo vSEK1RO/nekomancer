@@ -6,8 +6,11 @@ namespace nek::core
 {
     Reactive &Reactive::operator=(Reactive &&rhs) noexcept
     {
-        Reactive temp(std::move(rhs));
-        swap(temp);
+        if (this != &rhs)
+        {
+            Reactive temp(std::move(rhs));
+            swap(temp);
+        }
         return *this;
     }
 

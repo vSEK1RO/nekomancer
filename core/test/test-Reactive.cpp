@@ -23,7 +23,8 @@ namespace ENTRY
     {
         Reactive a;
         auto &watcher = a.watch([](){});
-        Reactive b(std::move(a));
+        Reactive b;
+        b = std::move(a);
         EXPECT_ANY_THROW(a.unwatch(watcher));
         EXPECT_NO_THROW(b.unwatch(watcher));
     }

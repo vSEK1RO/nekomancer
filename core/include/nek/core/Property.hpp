@@ -18,6 +18,28 @@ namespace nek::core
         Property() = default;
         Property(const Property &) = delete;
         Property &operator=(const Property &) = delete;
+        /**
+         * Constructs object from moved
+         */
+        Property(Property &&rhs) noexcept
+            : _ptr(std::exchange(rhs._ptr, nullptr)) {};
+        /**
+         * moves passed object into this
+         * @return *this
+         */
+        Property &operator=(Property &&rhs) noexcept
+        {
+            if (this != &rhs)
+            {
+                Property temp(std::move(rhs));
+                swap(temp);
+            }
+            return *this;
+        }
+        void swap(Property &rhs) noexcept
+        {
+            std::swap(_ptr, rhs._ptr);
+        }
 
         /**
          * Construct initialized object, using emplace constructor arguments

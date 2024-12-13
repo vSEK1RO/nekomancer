@@ -34,6 +34,16 @@ namespace ENTRY
         }
     };
 
+    TEST(ENTRY, move)
+    {
+        Property<int> a;
+        a.emplace(1);
+        Property<int> b;
+        b = std::move(a);
+        EXPECT_ANY_THROW(a());
+        EXPECT_NO_THROW(b());
+    }
+
     TEST(ENTRY, constructor__emplace)
     {
         std::string json_string = R"({
