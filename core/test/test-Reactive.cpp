@@ -28,6 +28,7 @@ namespace ENTRY
         a.set(1);
         EXPECT_TRUE(notified);
         EXPECT_ANY_THROW(a.watch(watcher));
+        EXPECT_ANY_THROW(a.watch(std::move(watcher)));
 
         auto unwatched = a.unwatch(watcher);
         notified = false;

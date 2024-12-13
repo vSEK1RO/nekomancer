@@ -5,6 +5,22 @@
 
 namespace nek::core
 {
+    Reactive::Reactive(Reactive &&rhs) noexcept
+    {
+        swap(rhs);
+    }
+
+    Reactive &Reactive::operator=(Reactive &&rhs) noexcept
+    {
+        swap(rhs);
+        return *this;
+    }
+
+    void Reactive::swap(Reactive &rhs) noexcept
+    {
+        std::swap(_watchers, rhs._watchers);
+    }
+
     const Reactive::Watcher &Reactive::watch(const Watcher &watcher)
     {
         if (_find(watcher) != _watchers.end())
@@ -17,7 +33,7 @@ namespace nek::core
 
     const Reactive::Watcher &Reactive::watch(Watcher &&watcher)
     {
-        _watchers.push_back(std::forward<Watcher>(watcher));
+        _watchers.push_back(std::move(watcher));
         return *_watchers.rbegin();
     }
 
@@ -29,7 +45,15 @@ namespace nek::core
             return watcher;
         }
         Watcher unwatched = *w_it;
-        _watchers.erase(w_it);
+        try
+        {
+            _watchers.erase(w_it);
+        }
+        catch (...)
+        {
+            *w_it = std::move(unwatched);
+            throw;
+        }
         return unwatched;
     }
 
@@ -62,7 +86,7 @@ namespace nek::core
         return watchers;
     }
 
-    std::vector<Reactive::Watcher>::const_iterator Reactive::_find(const Watcher &watcher) const noexcept
+    std::vector<Reactive::Watcher>::iterator Reactive::_find(const Watcher &watcher) noexcept
     {
         return std::find_if(_watchers.begin(), _watchers.end(), [&](const Watcher &_watcher)
                             { return &_watcher == &watcher; });

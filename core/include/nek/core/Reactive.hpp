@@ -18,8 +18,20 @@ namespace nek::core
          */
         using Watcher = std::function<void()>;
 
+        Reactive() = default;
         Reactive(const Reactive &) = delete;
         Reactive &operator=(const Reactive &) = delete;
+        /**
+         * Constructs object from moved
+         */
+        Reactive(Reactive &&rhs) noexcept;
+        /**
+         * moves passed object into it
+         * @return *this
+         */
+        Reactive &operator=(Reactive &&rhs) noexcept;
+        void swap(Reactive &rhs) noexcept;
+
         /**
          * copies passed function into object's watchers inner storage
          * @return reference to added watcher, which may be passed into unwatch later
@@ -36,7 +48,11 @@ namespace nek::core
          * @param watcher reference to added watcher, which was returned by watch()
          * @return removed function if watcher existed, else copy passed watcher
          */
-        Watcher unwatch(const Watcher &watcher)
+        Watcher unwatch(const Watcher &watcher);
+        /**
+         * calls every watcher with copy passed params
+         */
+        void notify() const;
 
         virtual ~Reactive() = default;
 
@@ -50,11 +66,6 @@ namespace nek::core
          */
         thread_local inline static std::unordered_set<Reactive *> tracked = {};
 
-        Reactive() = default;
-        /**
-         * calls every watcher with copy passed params
-         */
-        void notify() const;
         /**
          * adds this reactive to "tracked" set if flag do_track was set true
          */
@@ -72,6 +83,6 @@ namespace nek::core
          * compares address of passed reference and addresses in object's watchers inner storage
          * @return iterator of found watcher
          */
-        std::vector<Watcher>::const_iterator _find(const Watcher &watcher) const noexcept;
+        std::vector<Watcher>::iterator _find(const Watcher &watcher) noexcept;
     };
 }
