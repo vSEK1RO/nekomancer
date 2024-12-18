@@ -29,7 +29,7 @@ namespace nek::core
             : _default(default_), _value(value) {};
         /**
          * Constructs object from json: { default: T, value?: T }
-         * @throw Exception::PROPERTY_JSON if doesn't have "default" property
+         * @throw Exception::JSON_PROPERTY if doesn't have "default" property
          */
         State(const Json::Value &json)
         {
@@ -90,13 +90,13 @@ namespace nek::core
         }
         /**
          * sets object properties from json: { default: T, value?: T }
-         * @throw Exception::PROPERTY_JSON if doesn't have "default" property
+         * @throw Exception::JSON_PROPERTY if doesn't have "default" property
          */
         IJsonable &from(const Json::Value &json) override
         {
             if (!json.contains("default"))
             {
-                throw Exception(Exception::PROPERTY_JSON, "default");
+                throw Exception(Exception::JSON_PROPERTY, "default");
             }
             _default = Json::to<T>(json["default"]);
             if (json.contains("value"))

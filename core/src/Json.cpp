@@ -1,4 +1,5 @@
 #include <nek/core/Json.hpp>
+#include <nek/core/Exception.hpp>
 
 namespace nek::core
 {
@@ -21,12 +22,12 @@ namespace nek::core
             }
             catch (const Value::parse_error &e)
             {
-                throw Exception(Exception::PARSE_JSON, e.what());
+                throw Exception(Exception::JSON_PARSE, e.what());
             }
         }
         std::string stringify(const Value &json) noexcept
         {
-            return json.dump(4);
+            return json.dump(2);
         }
     }
 }

@@ -13,6 +13,11 @@ namespace ENTRY
             from(json);
         }
 
+        bool operator==(const A &rhs) const noexcept
+        {
+            return v == rhs.v;
+        }
+
         A &from(const Json::Value &json) override
         {
             if (json.contains("v"))
@@ -21,7 +26,7 @@ namespace ENTRY
             }
             else
             {
-                throw Exception(Exception::PROPERTY_JSON, "v");
+                throw Exception(Exception::JSON_PROPERTY, "v");
             }
             return *this;
         }
@@ -55,8 +60,7 @@ namespace ENTRY
 
     TEST(ENTRY, stringify)
     {
-        std::string correct = "{\n    \"v\": 10\n}";
-        EXPECT_EQ(ENTRY::A(10).stringify(), correct);
+        EXPECT_EQ(A(Json::parse(A(10).stringify())).v, 10);
     }
 
     struct B
@@ -67,7 +71,20 @@ namespace ENTRY
     {
         EXPECT_TRUE(IsIJsonable<A>);
         EXPECT_FALSE(IsIJsonable<B>);
-        EXPECT_TRUE(Json::IsConvertible<int>);
-        EXPECT_FALSE(Json::IsConvertible<Reactive>);
+    }
+
+    TEST(ENTRY, basic_types)
+    {
+        Json::Value json = -1;
+        EXPECT_EQ(Json::to<int>(json), -1);
+        EXPECT_EQ(Json::to<uint32_t>(json), -1u);
+    }
+
+    TEST(ENTRY, custom_serializer)
+    {
+        std::vector<A> a = {1, 2};
+        auto json = Json::from(a);
+        auto b = Json::to<std::vector<A>>(json);
+        EXPECT_EQ(a, b);
     }
 }

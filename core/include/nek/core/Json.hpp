@@ -3,7 +3,6 @@
 #include <string>
 #include <type_traits>
 #include <nlohmann/json.hpp>
-#include <nek/core/Exception.hpp>
 
 namespace nek::core
 {
@@ -27,50 +26,36 @@ namespace nek::core
 
     template <typename T>
     concept IsIJsonable = requires(const Json::Value &json) {
-        T(json);
+        T{json};
     } && std::is_base_of_v<IJsonable, T>;
+
+    template <IsIJsonable T, typename basic_json>
+    void to_json(basic_json &j, const T &t)
+    {
+        j = t.toJson();
+    }
+
+    template <IsIJsonable T, typename basic_json>
+    void from_json(const basic_json &j, T &t)
+    {
+        t.from(j);
+    }
 
     namespace Json
     {
-        template <typename T>
-        concept IsConvertible = requires(const Value &json) {
-            { json.get<T>() } -> std::same_as<T>;
-        };
-
         Value parse(std::string_view sv);
         std::string stringify(const Value &json) noexcept;
 
         template <typename T>
         Value from(const T &t)
         {
-            if constexpr (IsConvertible<T>)
-            {
-                return Value(t);
-            }
-            else if constexpr (IsIJsonable<T>)
-            {
-                return t.toJson();
-            }
-            else
-            {
-                throw Exception(Exception::OBJECT_TYPE_JSON);
-            }
+            return Value(t);
         }
+
         template <typename T>
         T to(const Value &json)
         {
-            if constexpr (IsConvertible<T>)
-            {
-                return json.get<T>();
-            }
-            else if constexpr (IsIJsonable<T>)
-            {
-                return T(json);
-            }
-            else
-            {
-                throw Exception(Exception::PROPERTY_TYPE_JSON);
-            }
+            return json.get<T>();
         }
     }
 }

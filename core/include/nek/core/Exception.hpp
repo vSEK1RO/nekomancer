@@ -13,10 +13,10 @@ namespace nek::core
     public:
         enum Code
         {
-            PARSE_JSON,
-            PROPERTY_JSON,
-            PROPERTY_TYPE_JSON,
-            OBJECT_TYPE_JSON,
+            JSON_PARSE,
+            JSON_PROPERTY,
+            JSON_TO_TYPE,
+            JSON_FROM_TYPE,
             ALREADY_WATCHED,
             NOT_WATCHED,
             PROPERTY_INITIALIZED,
