@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <nek/core/Reactive.hpp>
 #include <nek/core/Exception.hpp>
 
 namespace nek::core
