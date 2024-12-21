@@ -9,7 +9,7 @@ namespace nek::core
      * wrapper which provides ability for late initialisation
      */
     template <typename T>
-    class Property
+    class Property : public Reactive
     {
     public:
         /**
@@ -22,7 +22,7 @@ namespace nek::core
          * Constructs object from moved
          */
         Property(Property &&rhs) noexcept
-            : _ptr(std::exchange(rhs._ptr, nullptr)) {};
+            : Reactive(std::move(rhs)), _ptr(std::exchange(rhs._ptr, nullptr)) {};
         /**
          * moves passed object into this
          * @return *this
@@ -39,6 +39,7 @@ namespace nek::core
         void swap(Property &rhs) noexcept
         {
             std::swap(_ptr, rhs._ptr);
+            Reactive::swap(rhs);
         }
 
         /**
@@ -63,6 +64,7 @@ namespace nek::core
                 throw Exception(Exception::PROPERTY_INITIALIZED);
             }
             _ptr = std::make_unique<T>(std::forward<Args>(args)...);
+            Reactive::notify();
             return *this;
         }
         /**
@@ -72,6 +74,7 @@ namespace nek::core
          */
         T &operator()() const
         {
+            Reactive::trackSelf();
             if (_ptr.get() == nullptr)
             {
                 throw Exception(Exception::PROPERTY_UNINITIALIZED);
@@ -85,6 +88,7 @@ namespace nek::core
          */
         T *get() const noexcept
         {
+            Reactive::trackSelf();
             return _ptr.get();
         }
 

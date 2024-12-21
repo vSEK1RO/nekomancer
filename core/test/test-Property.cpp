@@ -36,12 +36,25 @@ namespace ENTRY
 
     TEST(ENTRY, move)
     {
-        Property<int> a;
-        a.emplace(1);
-        Property<int> b;
-        b = std::move(a);
-        EXPECT_ANY_THROW(a());
-        EXPECT_NO_THROW(b());
+        {
+            Property<int> a;
+            a.emplace(1);
+            Property<int> b;
+            b = std::move(a);
+            EXPECT_ANY_THROW(a());
+            EXPECT_NO_THROW(b());
+        }
+        {
+            Property<int> a;
+            bool notified = false;
+            a.watch([&]()
+                    { notified = true; });
+            Property<int> b(std::move(a));
+            a.emplace(1);
+            EXPECT_FALSE(notified);
+            b.emplace(1);
+            EXPECT_TRUE(notified);
+        }
     }
 
     TEST(ENTRY, constructor__emplace)
@@ -86,5 +99,27 @@ namespace ENTRY
 
         a.emplace(1);
         EXPECT_TRUE(a.get());
+    }
+
+    TEST(ENTRY, watch)
+    {
+        Property<bool> a;
+        bool notified = 0;
+        a.watch([&]()
+                { notified = true; });
+        Computed<bool> b([&]()
+                         {
+            try
+            {
+                return a();
+            }
+            catch(...)
+            {
+                return false;
+            } });
+        a.emplace(true);
+
+        EXPECT_EQ(b.get(), true);
+        EXPECT_TRUE(notified);
     }
 }
