@@ -22,6 +22,7 @@ namespace nek::core
             PROPERTY_INITIALIZED,
             PROPERTY_UNINITIALIZED,
             COMPONENT_DYNAMIC_CAST,
+            COMPONENT_NOT_FOUND,
         };
         static const std::unordered_map<Code, std::string> messages;
 

@@ -26,21 +26,35 @@ namespace nek::core
         template <IsIComponent T = IComponent>
         std::shared_ptr<T> create(const std::string &name_) const
         {
-            const IComponent::Info &info = _infos.at(name_);
-            IComponent *ptr = info.construct();
-
-            ptr->id.emplace(info.id);
-            T *casted_ptr = dynamic_cast<T *>(ptr);
-            if (casted_ptr == nullptr)
+            try
             {
-                throw Exception(Exception::COMPONENT_DYNAMIC_CAST, name_);
+                const IComponent::Info &info = _infos.at(name_);
+                IComponent *ptr = info.construct();
+
+                ptr->id.emplace(info.id);
+                T *casted_ptr = dynamic_cast<T *>(ptr);
+                if (casted_ptr == nullptr)
+                {
+                    throw Exception(Exception::COMPONENT_DYNAMIC_CAST, name_);
+                }
+                return std::shared_ptr<T>(casted_ptr, info.destruct);
             }
-            return std::shared_ptr<T>(casted_ptr, info.destruct);
+            catch(...)
+            {
+                throw Exception(Exception::COMPONENT_NOT_FOUND, name_);
+            }
         }
 
         const IComponent::Id &id(const std::string &name_) const
         {
-            return _infos.at(name_).id;
+            try
+            {
+                return _infos.at(name_).id;
+            }
+            catch(...)
+            {
+                throw Exception(Exception::COMPONENT_NOT_FOUND, name_);
+            }
         }
 
         bool has(const std::string &name_) const

@@ -3,7 +3,6 @@ include(FetchContent)
 find_package(nlohmann_json QUIET)
 if (NOT nlohmann_json_FOUND)
     message(STATUS "nlohmann_json not found, fetching...")
-    include(FetchContent)
     FetchContent_Declare(
         nlohmann_json
         GIT_REPOSITORY https://github.com/nlohmann/json.git
@@ -16,8 +15,14 @@ endif()
 
 find_package(Poco QUIET)
 if (NOT Poco_FOUND)
+    set(POCO_BUILD_CODERS OFF CACHE BOOL "Disable Poco coders" FORCE)
+    set(POCO_BUILD_NET OFF CACHE BOOL "Disable Poco network modules" FORCE)
+    set(POCO_BUILD_UTIL OFF CACHE BOOL "Disable Poco utility modules" FORCE)
+    set(POCO_BUILD_XML OFF CACHE BOOL "Disable Poco XML modules" FORCE)
+    set(POCO_BUILD_NETSSL OFF CACHE BOOL "Disable Poco SSL/TLS support" FORCE)
+    set(POCO_BUILD_TESTS OFF CACHE BOOL "Disable Poco tests" FORCE)
+    set(POCO_BUILD_EXAMPLES OFF CACHE BOOL "Disable Poco examples" FORCE)
     message(STATUS "Poco not found, fetching...")
-    include(FetchContent)
     FetchContent_Declare(
         Poco
         GIT_REPOSITORY https://github.com/pocoproject/poco.git

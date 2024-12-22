@@ -1,16 +1,14 @@
 #pragma once
 
+#include "Alive.hpp"
 #include <nek/core/Json.hpp>
 #include <nek/core/Property.hpp>
-#include <nek/core/Component/Plugin.hpp>
+#include <nek/core/Component.hpp>
 
 namespace nek
 {
-    struct CAlive : public core::IComponent
+    struct CAlive : public Alive
     {
-        core::Property<int> health;
-        core::Property<int> mana;
-
         CAlive() = default;
 
         CAlive(const core::Json::Value &config_);
@@ -18,6 +16,6 @@ namespace nek
         CAlive &from(const core::Json::Value &config_) override;
         core::Json::Value toJson() const noexcept override;
 
-        ~CAlive() override = default;
+        virtual ~CAlive() override = default;
     };
 }
