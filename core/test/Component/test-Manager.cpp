@@ -6,21 +6,25 @@
 
 namespace ENTRY
 {
-    TEST(ENTRY, constructor_from_id_has_construct)
-    {
-        Json::Value config = {{"CAlive", "./components/CAlive.so"}};
-        Json::Value component_config = {
-            {"health", 10},
-            {"mana", 10}
-        };
+    Json::Value config = {{"CAlive", "./components/CAlive.so"}};
+    Json::Value component_config = {
+        {"health", 10},
+        {"mana", 10}};
 
-        ComponentManager manager(config);
+    ComponentManager manager(config);
+
+    std::shared_ptr<IComponent> ptr;
+    std::shared_ptr<nek::Alive> casted_ptr;
+
+    TEST(ENTRY, constructor_from_id_has)
+    {
         EXPECT_TRUE(manager.has("CAlive"));
         EXPECT_FALSE(manager.has("123"));
         EXPECT_EQ(manager.id("CAlive"), 0);
+    }
 
-        std::shared_ptr<IComponent> ptr;
-        std::shared_ptr<nek::Alive> casted_ptr;
+    TEST(ENTRY, construct)
+    {
         EXPECT_NO_THROW(ptr = manager.create("CAlive"));
         EXPECT_EQ(ptr->id(), 0);
         EXPECT_NO_THROW(casted_ptr = manager.create<nek::Alive>("CAlive"));
@@ -29,5 +33,14 @@ namespace ENTRY
         casted_ptr->from(component_config);
         EXPECT_EQ(casted_ptr->health(), 10);
         EXPECT_EQ(casted_ptr->mana(), 10);
+    }
+
+    TEST(ENTRY, mount_unmount)
+    {
+        EXPECT_EQ(casted_ptr->status().get(), Component::Status::CREATED);
+        casted_ptr->mount();
+        EXPECT_EQ(casted_ptr->status().get(), Component::Status::MOUNTED);
+        casted_ptr->unmount();
+        EXPECT_EQ(casted_ptr->status().get(), Component::Status::UNMOUNTED);
     }
 }

@@ -3,11 +3,28 @@
 #include <cstdint>
 #include <type_traits>
 #include <nek/core/Json.hpp>
-// #include <nek/core/State.hpp>
+#include <nek/core/State.hpp>
 #include <nek/core/Property.hpp>
 
 namespace nek::core
 {
+    namespace Component
+    {
+        enum Status : uint8_t
+        {
+            CREATED,
+            MOUNTED,
+            UNMOUNTED,
+            DELETED,
+        };
+        NLOHMANN_JSON_SERIALIZE_ENUM(Status, {
+                                                 {Status::CREATED, "CREATED"},
+                                                 {Status::MOUNTED, "MOUNTED"},
+                                                 {Status::UNMOUNTED, "UNMOUNTED"},
+                                                 {Status::DELETED, "DELETED"},
+                                             })
+    }
+
     struct IComponent : public IJsonable
     {
         using Id = uint32_t;
@@ -20,37 +37,24 @@ namespace nek::core
             Construct construct;
             Destruct destruct;
         };
-        // enum Status : uint8_t
-        // {
-        //     CREATED,
-        //     MOUNTED,
-        //     UNMOUNTED,
-        //     DELETED,
-        // };
-        // NLOHMANN_JSON_SERIALIZE_ENUM( Status, {
-        //     {Status::CREATED, "CREATED"},
-        //     {Status::MOUNTED, "MOUNTED"},
-        //     {Status::UNMOUNTED, "UNMOUNTED"},
-        //     {Status::DELETED, "DELETED"},
-        // })
 
         Property<const Id> id;
-        // Property<State<Status>> status;
+        Property<State<Component::Status>> status{Component::Status::CREATED};
 
-        // virtual void mount()
-        // {
-        //     status().set(Status::MOUNTED);
-        // }
+        virtual void mount()
+        {
+            status().set(Component::Status::MOUNTED);
+        }
 
-        // virtual void unmount()
-        // {
-        //     status().set(Status::UNMOUNTED);
-        // }
+        virtual void unmount()
+        {
+            status().set(Component::Status::UNMOUNTED);
+        }
 
-        virtual ~IComponent() = default;
-        // {
-        //     status().set(Status::DELETED);
-        // }
+        virtual ~IComponent()
+        {
+            status().set(Component::Status::DELETED);
+        }
     };
 
     template <typename T>
