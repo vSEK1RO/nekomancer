@@ -26,41 +26,29 @@ namespace nek::core
         template <IsIComponent T = IComponent>
         std::shared_ptr<T> create(const std::string &name_) const
         {
+            Component::Info info;
             try
             {
-                const IComponent::Info &info = _infos.at(name_);
-                IComponent *ptr = info.construct();
-
-                ptr->id.emplace(info.id);
-                T *casted_ptr = dynamic_cast<T *>(ptr);
-                if (casted_ptr == nullptr)
-                {
-                    throw Exception(Exception::COMPONENT_DYNAMIC_CAST, name_);
-                }
-                return std::shared_ptr<T>(casted_ptr, info.destruct);
+                info = _infos.at(name_);
             }
-            catch(...)
+            catch (...)
             {
                 throw Exception(Exception::COMPONENT_NOT_FOUND, name_);
             }
+            IComponent *ptr = info.construct();
+
+            ptr->id.emplace(info.id);
+            T *casted_ptr = dynamic_cast<T *>(ptr);
+            if (casted_ptr == nullptr)
+            {
+                throw Exception(Exception::COMPONENT_DYNAMIC_CAST, name_);
+            }
+            return std::shared_ptr<T>(casted_ptr, info.destruct);
         }
 
-        const IComponent::Id &id(const std::string &name_) const
-        {
-            try
-            {
-                return _infos.at(name_).id;
-            }
-            catch(...)
-            {
-                throw Exception(Exception::COMPONENT_NOT_FOUND, name_);
-            }
-        }
-
-        bool has(const std::string &name_) const
-        {
-            return _infos.contains(name_);
-        }
+        const Component::Id &id(const std::string &name_) const;
+        const std::string &name(const Component::Id &id_) const;
+        bool has(const std::string &name_) const;
 
         ComponentManager &from(const Json::Value &config_);
         Json::Value toJson() const noexcept
@@ -70,7 +58,7 @@ namespace nek::core
 
     private:
         Json::Value _config;
-        std::unordered_map<std::string, IComponent::Info> _infos;
+        std::unordered_map<std::string, Component::Info> _infos;
 
         ComponentManager &_from(const Json::Value &config_);
     };

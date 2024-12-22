@@ -14,7 +14,7 @@ namespace nek::core
         {Code::PROPERTY_INITIALIZED, "property constructor cannot be called after initialisation"},
         {Code::PROPERTY_UNINITIALIZED, "property is uninitialized"},
         {Code::COMPONENT_DYNAMIC_CAST, "passed component cannot be casted to its real type"},
-        {Code::COMPONENT_NOT_FOUND, "component with following name not found"},
+        {Code::COMPONENT_NOT_FOUND, "component with following name / id not found"},
     };
     Exception::Exception(Code code, std::string_view description, const std::source_location &location)
     {

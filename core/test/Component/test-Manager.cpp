@@ -16,11 +16,12 @@ namespace ENTRY
     std::shared_ptr<IComponent> ptr;
     std::shared_ptr<nek::Alive> casted_ptr;
 
-    TEST(ENTRY, constructor_from_id_has)
+    TEST(ENTRY, constructor_from_id_name_has)
     {
         EXPECT_TRUE(manager.has("CAlive"));
         EXPECT_FALSE(manager.has("123"));
         EXPECT_EQ(manager.id("CAlive"), 0);
+        EXPECT_EQ(manager.name(0), "CAlive");
     }
 
     TEST(ENTRY, construct)

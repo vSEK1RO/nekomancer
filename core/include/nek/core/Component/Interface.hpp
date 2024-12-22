@@ -8,9 +8,22 @@
 
 namespace nek::core
 {
+    struct IComponent;
+
     namespace Component
     {
-        enum Status : uint8_t
+        using Id = uint32_t;
+        using Construct = IComponent *(*)();
+        using Destruct = void (*)(const IComponent *);
+
+        struct Info
+        {
+            Id id;
+            Construct construct;
+            Destruct destruct;
+        };
+
+        enum class Status : uint8_t
         {
             CREATED,
             MOUNTED,
@@ -27,18 +40,7 @@ namespace nek::core
 
     struct IComponent : public IJsonable
     {
-        using Id = uint32_t;
-        using Construct = IComponent *(*)();
-        using Destruct = void (*)(const IComponent *);
-
-        struct Info
-        {
-            Id id;
-            Construct construct;
-            Destruct destruct;
-        };
-
-        Property<const Id> id;
+        Property<const Component::Id> id;
         Property<State<Component::Status>> status{Component::Status::CREATED};
 
         virtual void mount()
