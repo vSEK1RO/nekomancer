@@ -3,6 +3,7 @@
 #include <string>
 #include <type_traits>
 #include <nlohmann/json.hpp>
+#include <nek/core/Exception.hpp>
 
 namespace nek::core
 {
@@ -43,19 +44,39 @@ namespace nek::core
 
     namespace Json
     {
+        template <typename T>
+        concept IsConvertible = requires(Json::Value json, T t) {
+            { json.get<T>() } -> std::same_as<T>;
+            { Value{t} };
+        };
+
         Value parse(std::string_view sv);
         std::string stringify(const Value &json) noexcept;
 
         template <typename T>
         Value from(const T &t)
         {
-            return Value(t);
+            if constexpr (IsConvertible<T>)
+            {
+                return Value(t);
+            }
+            else
+            {
+                throw Exception(Exception::JSON_FROM_TYPE);
+            }
         }
 
         template <typename T>
         T to(const Value &json)
         {
-            return json.get<T>();
+            if constexpr (IsConvertible<T>)
+            {
+                return json.get<T>();
+            }
+            else
+            {
+                throw Exception(Exception::JSON_TO_TYPE);
+            }
         }
     }
 }

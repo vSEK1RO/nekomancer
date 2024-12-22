@@ -105,3 +105,16 @@ TEST(ENTRY, IJsonable)
         EXPECT_EQ(a.reset().get().v[0], 1);
     }
 }
+
+TEST(ENTRY, non_IJsonable)
+{
+    {
+        enum Status : uint8_t
+        {
+            CREATED,
+            DELETED,
+        };
+        State<Status> a(Status::CREATED);
+        EXPECT_ANY_THROW(a.from(Json::Value()));
+    }
+}
