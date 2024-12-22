@@ -44,6 +44,7 @@ add_library(
     Exception.cpp
     Json.cpp
     Component/Manager.cpp
+    Component/Store.cpp
 )
 target_link_libraries(
     nek-core
