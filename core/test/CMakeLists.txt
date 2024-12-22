@@ -16,6 +16,7 @@ else()
 endif()
 
 enable_testing()
+add_subdirectory(components)
 
 add_executable(
     nek-core-test

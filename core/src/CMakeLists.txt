@@ -29,6 +29,8 @@ else()
 endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-result -O2")
+set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
+set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 
 add_library(
     nek-core

@@ -3,3 +3,4 @@
 #include "test-State.cpp"
 #include "test-Computed.cpp"
 #include "test-Property.cpp"
+#include "test-Component.hpp"

@@ -19,19 +19,19 @@ namespace nek::core
             throw Exception(Exception::JSON_PROPERTY, "'components' should be object of type\n{\t[name: string]: [path: string]\n}");
         }
 
-        Component::Id id = 0;
-        std::unordered_map<std::string, Component::Info> infos;
+        IComponent::Id id = 0;
+        std::unordered_map<std::string, IComponent::Info> infos;
 
         for (const auto &[name, path_json] : config_.items())
         {
             auto path = Json::to<std::string>(path_json);
-            Component::Construct construct;
-            Component::Destruct destruct;
+            IComponent::Construct construct;
+            IComponent::Destruct destruct;
             try
             {
                 Poco::SharedLibrary component(path);
-                construct = (Component::Construct)component.getSymbol("constructComponent");
-                destruct = (Component::Destruct)component.getSymbol("destructComponent");
+                construct = (IComponent::Construct)component.getSymbol("constructComponent");
+                destruct = (IComponent::Destruct)component.getSymbol("destructComponent");
                 if (!(construct && destruct))
                 {
                     throw;
@@ -43,7 +43,7 @@ namespace nek::core
                 continue;
             }
 
-            Component::Info info = {
+            IComponent::Info info = {
                 .id = id++,
                 .construct = construct,
                 .destruct = destruct,

@@ -69,7 +69,7 @@ namespace nek::core
         /**
          * creates type-independent watcher-wrapper () => void { watcher(old_value, value) } and watches itself by Reactive::watch
          * @return reference to added type-independent watcher-wrapper without args, which may be passed into unwatch later
-         * @exception Exception::ALREADY_WATCHED if this object already watched by passed function reference
+         * @throw Exception::ALREADY_WATCHED if this object already watched by passed function reference
          */
         const Reactive::Watcher &watch(const Watcher &watcher)
         {
@@ -82,7 +82,7 @@ namespace nek::core
          * overload of Reactive::watch, adds passed function into object's watchers inner storage
          * @param watcher reference to type-independent wrapper over type-dependent watcher, which was returned by watch()
          * @return reference to added type-independent watcher-wrapper without args, which may be passed into unwatch later
-         * @exception Exception::ALREADY_WATCHED if this object already watched by passed function reference
+         * @throw Exception::ALREADY_WATCHED if this object already watched by passed function reference
          */
         const Reactive::Watcher &watch(const Reactive::Watcher &watcher)
         {
@@ -90,9 +90,10 @@ namespace nek::core
         }
         /**
          * sets object properties from json: { default: T, value?: T }
+         * @return *this
          * @throw Exception::JSON_PROPERTY if doesn't have "default" property
          */
-        IJsonable &from(const Json::Value &json) override
+        State &from(const Json::Value &json) override
         {
             if (!json.contains("default"))
             {

@@ -12,7 +12,8 @@ namespace nek::core
         {Code::ALREADY_WATCHED, "this Reactive is already watched by passed function / lambda"},
         {Code::NOT_WATCHED, "this Reactive isn't watched by passed function / lambda"},
         {Code::PROPERTY_INITIALIZED, "property constructor cannot be called after initialisation"},
-        {Code::PROPERTY_UNINITIALIZED, "property is uninitialized"}
+        {Code::PROPERTY_UNINITIALIZED, "property is uninitialized"},
+        {Code::COMPONENT_DYNAMIC_CAST, "passed component cannot be casted to its real type"},
     };
     Exception::Exception(Code code, std::string_view description, const std::source_location &location)
     {

@@ -3,8 +3,9 @@
 #include <memory>
 #include <unordered_map>
 #include <nek/core/Json.hpp>
+#include <nek/core/Exception.hpp>
 #include <nek/core/Property.hpp>
-#include <nek/core/Component/Base.hpp>
+#include <nek/core/Component/Interface.hpp>
 
 namespace nek::core
 {
@@ -22,16 +23,22 @@ namespace nek::core
             from(config_);
         }
 
-        template <IsComponent T>
-        std::shared_ptr<T> create(const std::string &name_, const Json::Value &config_) const
+        template <IsIComponent T = IComponent>
+        std::shared_ptr<T> create(const std::string &name_) const
         {
-            Component::Info &info = _infos.at(name_);
-            Component *ptr = info.construct(&config_);
+            const IComponent::Info &info = _infos.at(name_);
+            IComponent *ptr = info.construct();
+
             ptr->id.emplace(info.id);
-            return std::shared_ptr<T>(ptr, info.destruct);
+            T *casted_ptr = dynamic_cast<T *>(ptr);
+            if (casted_ptr == nullptr)
+            {
+                throw Exception(Exception::COMPONENT_DYNAMIC_CAST, name_);
+            }
+            return std::shared_ptr<T>(casted_ptr, info.destruct);
         }
 
-        const Component::Id &id(const std::string &name_) const
+        const IComponent::Id &id(const std::string &name_) const
         {
             return _infos.at(name_).id;
         }
@@ -49,7 +56,7 @@ namespace nek::core
 
     private:
         Json::Value _config;
-        std::unordered_map<std::string, Component::Info> _infos;
+        std::unordered_map<std::string, IComponent::Info> _infos;
 
         ComponentManager &_from(const Json::Value &config_);
     };
