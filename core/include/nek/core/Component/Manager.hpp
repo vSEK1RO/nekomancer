@@ -6,13 +6,14 @@
 #include <nek/core/Exception.hpp>
 #include <nek/core/Property.hpp>
 #include <nek/core/Component/Interface.hpp>
+#include <nek/core/Observer/IObservable.hpp>
 
 namespace nek::core
 {
-    class ComponentManager : public IJsonable
+    class ComponentManager : public IJsonable, public IObservable
     {
     public:
-        ComponentManager() = delete;
+        ComponentManager() = default;
         ComponentManager(const ComponentManager &rhs) = delete;
         ComponentManager &operator=(const ComponentManager &rhs) = delete;
         ComponentManager(ComponentManager &&rhs) noexcept = default;

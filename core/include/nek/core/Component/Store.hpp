@@ -3,12 +3,13 @@
 #include <map>
 #include <memory>
 #include <nek/core/Json.hpp>
+#include <nek/core/Observer/IObservable.hpp>
 #include <nek/core/Component/Manager.hpp>
 #include <nek/core/Component/Interface.hpp>
 
 namespace nek::core
 {
-    class ComponentStore : public IJsonable
+    class ComponentStore : public IJsonable, public IObservable
     {
     public:
         ComponentStore() = delete;
@@ -17,6 +18,8 @@ namespace nek::core
         ComponentStore(ComponentStore &&rhs) noexcept = default;
         ComponentStore &operator=(ComponentStore &&rhs) noexcept = default;
 
+        ComponentStore(const ComponentManager *manager_) noexcept
+            : _manager(manager_) {};
         ComponentStore(const Json::Value &config_, const ComponentManager *manager_)
             : _manager(manager_)
         {
@@ -24,13 +27,13 @@ namespace nek::core
         }
 
         template <IsIComponent T = IComponent>
-        T &get(const std::string &name_)
+        T &get(const std::string &name_) const
         {
             auto id = _manager->id(name_);
             IComponent *ptr;
             try
             {
-                ptr = _components[id].get();
+                ptr = const_cast<ComponentStore *>(this)->_components[id].get();
             }
             catch (...)
             {

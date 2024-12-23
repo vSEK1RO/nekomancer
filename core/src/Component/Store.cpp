@@ -27,17 +27,31 @@ namespace nek::core
                 id = _manager->id(name);
                 ptr = _manager->create(name);
                 ptr->from(config_json);
-                ptr->mount(this);
                 components[id] = ptr;
             }
-            catch (...)
+            catch (const std::exception &e)
             {
-                // FIX log here
+                message().set({Observable::Status::WARNING, std::string("failed to create component ") + name + "\n" + e.what()});
+                continue;
+            }
+            message().set({Observable::Status::INFO, std::string("created component ") + name});
+        }
+
+        _components.clear();
+
+        for (const auto &[id, ptr] : components)
+        {
+            try
+            {
+                ptr->mount(this);
+                _components[id] = ptr;
+            }
+            catch (const std::exception &e)
+            {
+                message().set({Observable::Status::WARNING, std::string("failed to mount component ") + _manager->name(id) + "\n" + e.what()});
                 continue;
             }
         }
-        _components.clear();
-        _components = std::move(components);
         return *this;
     }
 
@@ -55,14 +69,10 @@ namespace nek::core
     {
         for (const auto &[id, ptr] : _components)
         {
-            try
+            if (ptr.get())
             {
                 ptr->unmount();
-            }
-            catch (...)
-            {
-                // FIX log here
-                continue;
+                message().set({Observable::Status::INFO, std::string("unmounted component ") + _manager->name(id)});
             }
         }
     }

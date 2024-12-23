@@ -9,7 +9,7 @@ namespace nek
 {
     struct Picture : public core::IComponent
     {
-        core::Property<core::Computed<std::string>> picture;
+        core::Property<core::Computed<std::string>> path;
 
         virtual ~Picture() override = default;
     };

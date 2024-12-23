@@ -20,13 +20,13 @@ namespace nek::core
     {
         _code = code;
         std::ostringstream oss;
-        oss << "\033[34m"
+        oss << "\n\033[34m"
             << location.function_name()
             << ':'
             << location.line()
-            << ": \033[31mnek::core::Exception:\t\033[0m"
+            << ": \033[31mnek::core::Exception:\n\033[0m"
             << message()
-            << "\n\n";
+            << "\n";
         if (!description.empty())
         {
             oss << description << "\n";

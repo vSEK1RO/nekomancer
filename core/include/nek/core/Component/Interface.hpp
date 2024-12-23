@@ -49,7 +49,7 @@ namespace nek::core
         virtual void unmount() const noexcept;
         virtual ~IComponent();
 
-    private:
+    protected:
         const ComponentStore *_store;
     };
 

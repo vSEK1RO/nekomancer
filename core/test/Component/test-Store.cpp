@@ -19,12 +19,26 @@ namespace ENTRY
         {"CAlive", alive_config},
         {"CPicture", {}}};
 
-    ComponentManager manager(manager_config);
-    ComponentStore store(store_config, &manager);
-
     TEST(ENTRY, constructor)
     {
+        IObserver &plog = ObserverPlog::getInstance();
+
+        ComponentManager manager;
+        manager.message().watch(plog.getWatcher());
+        manager.from(manager_config);
+
+        ComponentStore store(&manager);
+        store.message().watch(plog.getWatcher());
+        store.from(store_config);
+
         auto &alive = store.get<nek::Alive>("CAlive");
         auto &picture = store.get<nek::Picture>("CPicture");
+
+        EXPECT_EQ(alive.health().get(), 10);
+        EXPECT_EQ(picture.path().get(), "alive.png");
+
+        alive.health().reset();
+        EXPECT_EQ(alive.health().get(), 0);
+        EXPECT_EQ(picture.path().get(), "dead.png");
     }
 }

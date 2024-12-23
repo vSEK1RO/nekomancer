@@ -22,8 +22,5 @@ namespace nek
         Json::Value toJson() const noexcept override;
 
         virtual ~CPicture() override = default;
-
-    private:
-        std::vector<std::pair<Reactive *, Reactive::Watcher *>> _watchers;
     };
 }

@@ -66,9 +66,9 @@ namespace nek::core
                     throw;
                 }
             }
-            catch (...)
+            catch (const std::exception &e)
             {
-                // FIX log here
+                message().set({Observable::Status::WARNING, std::string("failed to load component ") + name + "\n" + e.what()});
                 continue;
             }
 
@@ -79,6 +79,7 @@ namespace nek::core
             };
 
             infos[name] = info;
+            message().set({Observable::Status::INFO, std::string("loaded component ") + name});
         }
         _infos.clear();
         _infos = std::move(infos);

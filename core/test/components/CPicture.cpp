@@ -1,4 +1,5 @@
 #include "CPicture.hpp"
+#include "Alive.hpp"
 
 namespace nek
 {
@@ -10,6 +11,17 @@ namespace nek
     void CPicture::mount(const ComponentStore *store_)
     {
         IComponent::mount(store_);
+        Alive &alive = _store->get<Alive>("CAlive");
+        path.emplace([&alive]()
+                     {
+            if (alive.health().get() > 0)
+            {
+                return "alive.png";
+            }
+            else
+            {
+                return "dead.png";
+            } });
     }
 
     void CPicture::unmount() const noexcept
@@ -25,5 +37,17 @@ namespace nek
     Json::Value CPicture::toJson() const noexcept
     {
         return Json::Value();
+    }
+}
+
+extern "C"
+{
+    IComponent *constructComponent()
+    {
+        return new nek::CPicture();
+    }
+    void destructComponent(const IComponent *component_ptr_) noexcept
+    {
+        delete component_ptr_;
     }
 }
