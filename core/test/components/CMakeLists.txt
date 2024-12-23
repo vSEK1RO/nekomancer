@@ -19,3 +19,20 @@ set_target_properties(
     OUTPUT_NAME
     "CAlive"
 )
+
+add_library(
+    test-CPicture
+    SHARED
+    CPicture.cpp
+)
+target_include_directories(
+    test-CPicture
+    PRIVATE
+    ../../include
+)
+set_target_properties(
+    test-CPicture
+    PROPERTIES
+    OUTPUT_NAME
+    "CPicture"
+)

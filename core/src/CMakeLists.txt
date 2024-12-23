@@ -45,6 +45,7 @@ add_library(
     Json.cpp
     Component/Manager.cpp
     Component/Store.cpp
+    Component/Interface.cpp
 )
 target_link_libraries(
     nek-core

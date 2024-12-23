@@ -8,8 +8,8 @@ namespace ENTRY
 {
     Json::Value config = {{"CAlive", "./components/CAlive.so"}};
     Json::Value component_config = {
-        {"health", 10},
-        {"mana", 10}};
+        {"health", {{"default", 10}}},
+        {"mana", {{"default", 10}}}};
 
     ComponentManager manager(config);
 
@@ -24,7 +24,7 @@ namespace ENTRY
         EXPECT_EQ(manager.name(0), "CAlive");
     }
 
-    TEST(ENTRY, construct)
+    TEST(ENTRY, create)
     {
         EXPECT_NO_THROW(ptr = manager.create("CAlive"));
         EXPECT_EQ(ptr->id(), 0);
@@ -32,16 +32,7 @@ namespace ENTRY
         EXPECT_EQ(casted_ptr->id(), 0);
 
         casted_ptr->from(component_config);
-        EXPECT_EQ(casted_ptr->health(), 10);
-        EXPECT_EQ(casted_ptr->mana(), 10);
-    }
-
-    TEST(ENTRY, mount_unmount)
-    {
-        EXPECT_EQ(casted_ptr->status().get(), Component::Status::CREATED);
-        casted_ptr->mount();
-        EXPECT_EQ(casted_ptr->status().get(), Component::Status::MOUNTED);
-        casted_ptr->unmount();
-        EXPECT_EQ(casted_ptr->status().get(), Component::Status::UNMOUNTED);
+        EXPECT_EQ(casted_ptr->health().get(), 10);
+        EXPECT_EQ(casted_ptr->mana().get(), 10);
     }
 }

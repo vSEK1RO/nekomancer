@@ -6,7 +6,7 @@ namespace nek::core
 {
     bool ComponentStore::has(const std::string &name_) const
     {
-        return _manager.has(name_) && _components.contains(_manager.id(name_));
+        return _manager->has(name_) && _components.contains(_manager->id(name_));
     }
 
     ComponentStore &ComponentStore::from(const Json::Value &config_)
@@ -24,9 +24,10 @@ namespace nek::core
         {
             try
             {
-                id = _manager.id(name);
-                ptr = _manager.create(name);
+                id = _manager->id(name);
+                ptr = _manager->create(name);
                 ptr->from(config_json);
+                ptr->mount(this);
                 components[id] = ptr;
             }
             catch (...)
@@ -45,8 +46,24 @@ namespace nek::core
         Json::Value json;
         for (const auto &[id, ptr] : _components)
         {
-            json[_manager.name(id)] = Json::from<IComponent>(*ptr);
+            json[_manager->name(id)] = Json::from<IComponent>(*ptr);
         }
         return json;
+    }
+
+    ComponentStore::~ComponentStore()
+    {
+        for (const auto &[id, ptr] : _components)
+        {
+            try
+            {
+                ptr->unmount();
+            }
+            catch (...)
+            {
+                // FIX log here
+                continue;
+            }
+        }
     }
 }

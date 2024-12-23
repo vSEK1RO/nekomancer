@@ -71,6 +71,11 @@ namespace ENTRY
     {
         EXPECT_TRUE(IsIJsonable<A>);
         EXPECT_FALSE(IsIJsonable<B>);
+        EXPECT_TRUE(IsIJsonable<State<A>>);
+        EXPECT_TRUE(Json::IsConvertibleTo<State<A>>);
+        EXPECT_TRUE(Json::IsConvertibleFrom<State<A>>);
+        EXPECT_TRUE(Json::IsConvertibleTo<A>);
+        EXPECT_TRUE(Json::IsConvertibleFrom<A>);
     }
 
     TEST(ENTRY, basic_types)

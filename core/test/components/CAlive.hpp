@@ -1,9 +1,8 @@
 #pragma once
 
 #include "Alive.hpp"
-#include <nek/core/Json.hpp>
-#include <nek/core/Property.hpp>
-#include <nek/core/Component.hpp>
+
+using namespace nek::core;
 
 namespace nek
 {
@@ -11,10 +10,10 @@ namespace nek
     {
         CAlive() = default;
 
-        CAlive(const core::Json::Value &config_);
+        CAlive(const Json::Value &config_);
 
-        CAlive &from(const core::Json::Value &config_) override;
-        core::Json::Value toJson() const noexcept override;
+        CAlive &from(const Json::Value &config_) override;
+        Json::Value toJson() const noexcept override;
 
         virtual ~CAlive() override = default;
     };

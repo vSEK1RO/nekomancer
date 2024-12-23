@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <cstdint>
 #include <type_traits>
 #include <nek/core/Json.hpp>
@@ -9,6 +10,7 @@
 namespace nek::core
 {
     struct IComponent;
+    struct ComponentStore;
 
     namespace Component
     {
@@ -43,20 +45,12 @@ namespace nek::core
         Property<const Component::Id> id;
         Property<State<Component::Status>> status{Component::Status::CREATED};
 
-        virtual void mount()
-        {
-            status().set(Component::Status::MOUNTED);
-        }
+        virtual void mount(const ComponentStore *store_);
+        virtual void unmount() const noexcept;
+        virtual ~IComponent();
 
-        virtual void unmount()
-        {
-            status().set(Component::Status::UNMOUNTED);
-        }
-
-        virtual ~IComponent()
-        {
-            status().set(Component::Status::DELETED);
-        }
+    private:
+        const ComponentStore *_store;
     };
 
     template <typename T>

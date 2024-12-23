@@ -26,9 +26,7 @@ namespace nek::core
     };
 
     template <typename T>
-    concept IsIJsonable = requires(const Json::Value &json) {
-        T{json};
-    } && std::is_base_of_v<IJsonable, T>;
+    concept IsIJsonable = std::is_base_of_v<IJsonable, T>;
 
     template <IsIJsonable T, typename basic_json>
     void to_json(basic_json &j, const T &t)
@@ -45,10 +43,17 @@ namespace nek::core
     namespace Json
     {
         template <typename T>
-        concept IsConvertible = requires(Json::Value json, T t) {
-            { json.get<T>() } -> std::same_as<T>;
+        concept IsConvertibleFrom = requires(T t) {
             { Value{t} };
         };
+
+        template <typename T>
+        concept IsConvertibleTo = requires(Json::Value json) {
+            { json.get<T>() } -> std::same_as<T>;
+        };
+
+        template <typename T>
+        concept IsConvertible = IsConvertibleFrom<T> && IsConvertibleTo<T>;
 
         Value parse(std::string_view sv);
         std::string stringify(const Value &json) noexcept;
@@ -56,7 +61,7 @@ namespace nek::core
         template <typename T>
         Value from(const T &t)
         {
-            if constexpr (IsConvertible<T>)
+            if constexpr (IsConvertibleFrom<T>)
             {
                 return Value(t);
             }
@@ -69,7 +74,7 @@ namespace nek::core
         template <typename T>
         T to(const Value &json)
         {
-            if constexpr (IsConvertible<T>)
+            if constexpr (IsConvertibleTo<T>)
             {
                 return json.get<T>();
             }
@@ -79,4 +84,22 @@ namespace nek::core
             }
         }
     }
+}
+
+namespace nlohmann
+{
+    template <typename T>
+        requires nek::core::IsIJsonable<T> && (!std::is_default_constructible_v<T>)
+    struct adl_serializer<T>
+    {
+        static void to_json(json &j, const T &t)
+        {
+            j = t.toJson();
+        }
+
+        static T from_json(const json &j)
+        {
+            return T(j);
+        }
+    };
 }

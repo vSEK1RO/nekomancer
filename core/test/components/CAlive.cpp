@@ -1,7 +1,5 @@
 #include "CAlive.hpp"
 
-using namespace nek::core;
-
 namespace nek
 {
     CAlive::CAlive(const Json::Value &config_)
@@ -11,16 +9,16 @@ namespace nek
 
     CAlive &CAlive::from(const Json::Value &config_)
     {
-        health.emplace(Json::to<int>(config_.at("health")));
-        mana.emplace(Json::to<int>(config_.at("mana")));
+        health.emplace(config_.at("health"));
+        mana.emplace(config_.at("mana"));
         return *this;
     }
 
     Json::Value CAlive::toJson() const noexcept
     {
         Json::Value json;
-        json["health"] = Json::from<int>(health());
-        json["mana"] = Json::from<int>(mana());
+        json["health"] = Json::from(health());
+        json["mana"] = Json::from(mana());
         return json;
     }
 }
