@@ -29,7 +29,8 @@ TEST(ENTRY, constructor_watch_unwatch)
     EXPECT_EQ(_old_value, 6);
     EXPECT_EQ(_value, 8);
 
-    EXPECT_NO_THROW(c.unwatch(watcher));
+    EXPECT_NO_THROW(c.getWatcher(watcher));
+    c.unwatch(watcher);
 
     notified = false;
     a.set(2);

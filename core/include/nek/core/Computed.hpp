@@ -74,11 +74,29 @@ namespace nek::core
         /**
          * removes function from object's watchers inner storage
          * @param watcher reference to added watcher, which was returned by watch()
-         * @return removed function if watcher existed, else copy passed watcher
+         * @return *this
          */
-        Reactive::Watcher unwatch(const Reactive::Watcher &watcher)
+        Computed &unwatch(const Reactive::Watcher &watcher)
         {
-            return _value->Reactive::unwatch(watcher);
+            _value->Reactive::unwatch(watcher);
+            return *this;
+        }
+        /**
+         * @param watcher reference to added watcher, which was returned by watch()
+         * @return copy of function by its reference
+         * @throw Exception::NOT_WATCHED if this object isn't watched by passed function reference
+         */
+        Reactive::Watcher getWatcher(const Reactive::Watcher &watcher) const
+        {
+            return _value->Reactive::getWatcher(watcher);
+        }
+        /**
+         * @param watcher reference to added watcher, which was returned by watch()
+         * @return was object watched by passed function ref
+         */
+        bool has(const Reactive::Watcher &watcher) const
+        {
+            return _value->Reactive::has(watcher);
         }
 
         ~Computed()

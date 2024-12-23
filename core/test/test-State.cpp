@@ -42,10 +42,11 @@ namespace ENTRY
         a.reset();
         EXPECT_FALSE(notified);
 
-        auto unwatched = a.unwatch(watcher);
+        auto unwatched = a.getWatcher(watcher);
+        a.unwatch(watcher);
         a.set(1);
         EXPECT_FALSE(notified);
-        EXPECT_ANY_THROW(a.unwatch(unwatched));
+        EXPECT_ANY_THROW(a.getWatcher(unwatched));
     }
 
     TEST(ENTRY, IJsonable)

@@ -52,10 +52,20 @@ namespace nek::core
         /**
          * removes function from object's watchers inner storage
          * @param watcher reference to added watcher, which was returned by watch()
-         * @return removed function if watcher existed
+         * @return *this
+         */
+        Reactive &unwatch(const Watcher &watcher);
+        /**
+         * @param watcher reference to added watcher, which was returned by watch()
+         * @return copy of function by its reference
          * @throw Exception::NOT_WATCHED if this object isn't watched by passed function reference
          */
-        Watcher unwatch(const Watcher &watcher);
+        Watcher getWatcher(const Watcher &watcher) const;
+        /**
+         * @param watcher reference to added watcher, which was returned by watch()
+         * @return was object watched by passed function ref
+         */
+        bool has(const Watcher &watcher) const;
         /**
          * calls every watcher with copy passed params
          */
@@ -90,6 +100,6 @@ namespace nek::core
          * compares address of passed reference and addresses in object's watchers inner storage
          * @return iterator of found watcher
          */
-        std::vector<Watcher>::iterator _find(const Watcher &watcher) noexcept;
+        std::vector<Watcher>::const_iterator _find(const Watcher &watcher) const;
     };
 }

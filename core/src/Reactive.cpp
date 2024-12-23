@@ -19,24 +19,29 @@ namespace nek::core
         std::swap(_watchers, rhs._watchers);
     }
 
-    Reactive::Watcher Reactive::unwatch(const Watcher &watcher)
+    Reactive &Reactive::unwatch(const Watcher &watcher)
+    {
+        auto w_it = _find(watcher);
+        if (w_it != _watchers.end())
+        {
+            _watchers.erase(w_it);
+        }
+        return *this;
+    }
+
+    Reactive::Watcher Reactive::getWatcher(const Watcher &watcher) const
     {
         auto w_it = _find(watcher);
         if (w_it == _watchers.end())
         {
             throw Exception(Exception::NOT_WATCHED);
         }
-        Watcher unwatched(std::move(*w_it));
-        try
-        {
-            _watchers.erase(w_it);
-        }
-        catch (...)
-        {
-            *w_it = std::move(unwatched);
-            throw;
-        }
-        return unwatched;
+        return *w_it;
+    }
+
+    bool Reactive::has(const Watcher &watcher) const
+    {
+        return _find(watcher) != _watchers.end();
     }
 
     void Reactive::notify() const
@@ -68,7 +73,7 @@ namespace nek::core
         return watchers;
     }
 
-    std::vector<Reactive::Watcher>::iterator Reactive::_find(const Watcher &watcher) noexcept
+    std::vector<Reactive::Watcher>::const_iterator Reactive::_find(const Watcher &watcher) const
     {
         return std::find_if(_watchers.begin(), _watchers.end(), [&](const Watcher &_watcher)
                             { return &_watcher == &watcher; });
