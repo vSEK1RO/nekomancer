@@ -1,5 +1,3 @@
-include(FetchContent)
-
 find_package(nlohmann_json QUIET)
 if (NOT nlohmann_json_FOUND)
     message(STATUS "nlohmann_json not found, fetching...")
@@ -88,6 +86,10 @@ target_include_directories(
     nek-core
     PUBLIC
     ../include
+)
+target_include_directories(
+    nek-core
+    PRIVATE
     ${Poco_INCLUDE_DIRS}
     ${nlohmann_json_schema_validator_SOURCE_DIR}/src/nlohmann
 )

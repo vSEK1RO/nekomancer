@@ -1,8 +1,6 @@
 set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-frtti")
 
-include(FetchContent)
-
 find_package(GTest QUIET)
 if (NOT GTest_FOUND)
     message(STATUS "gtest not found, fetching...")
