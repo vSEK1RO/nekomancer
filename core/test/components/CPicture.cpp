@@ -8,10 +8,10 @@ namespace nek
         from(config_);
     }
 
-    void CPicture::mount(const ComponentStore *store_)
+    void CPicture::mount()
     {
-        IComponent::mount(store_);
-        Alive &alive = _store->get<Alive>("CAlive");
+        IComponent::mount();
+        Alive &alive = store()->get<Alive>("CAlive");
         path.emplace([&alive]()
                      {
             if (alive.health().get() > 0)

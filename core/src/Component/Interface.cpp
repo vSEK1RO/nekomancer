@@ -4,9 +4,8 @@
 
 namespace nek::core
 {
-    void IComponent::mount(const ComponentStore *store_)
+    void IComponent::mount()
     {
-        _store = store_;
         status().set(Component::Status::MOUNTED);
     }
 

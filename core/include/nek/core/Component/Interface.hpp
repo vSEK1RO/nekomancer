@@ -43,14 +43,12 @@ namespace nek::core
     struct IComponent : public IJsonable
     {
         Property<const Component::Id> id;
+        Property<const ComponentStore *> store;
         Property<State<Component::Status>> status{Component::Status::CREATED};
 
-        virtual void mount(const ComponentStore *store_);
+        virtual void mount();
         virtual void unmount() const noexcept;
         virtual ~IComponent();
-
-    protected:
-        const ComponentStore *_store;
     };
 
     template <typename T>

@@ -43,7 +43,8 @@ namespace nek::core
         {
             try
             {
-                ptr->mount(this);
+                ptr->store.emplace(this);
+                ptr->mount();
                 _components[id] = ptr;
             }
             catch (const std::exception &e)
@@ -51,6 +52,7 @@ namespace nek::core
                 message().set({Observable::Status::WARNING, std::string("failed to mount component ") + _manager->name(id) + "\n" + e.what()});
                 continue;
             }
+            message().set({Observable::Status::INFO, std::string("mounted component ") + _manager->name(id)});
         }
         return *this;
     }
