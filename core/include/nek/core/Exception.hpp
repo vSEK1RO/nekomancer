@@ -15,6 +15,7 @@ namespace nek::core
         {
             JSON_PARSE,
             JSON_PROPERTY,
+            JSON_VALIDATION,
             JSON_TO_TYPE,
             JSON_FROM_TYPE,
             ALREADY_WATCHED,

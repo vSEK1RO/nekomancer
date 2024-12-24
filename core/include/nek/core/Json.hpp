@@ -57,6 +57,7 @@ namespace nek::core
 
         Value parse(std::string_view sv);
         std::string stringify(const Value &json) noexcept;
+        void validate(const Value &json, const Value &schema);
 
         template <typename T>
         Value from(const T &t)

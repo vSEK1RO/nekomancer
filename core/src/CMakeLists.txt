@@ -13,6 +13,19 @@ else()
     message(STATUS "Found nlohmann_json")
 endif()
 
+find_package(nlohmann_json_schema_validator QUIET)
+if (NOT nlohmann_json_schema_validator_FOUND)
+    message(STATUS "nlohmann_json_schema_validator not found, fetching...")
+    FetchContent_Declare(
+        nlohmann_json_schema_validator
+        GIT_REPOSITORY https://github.com/pboettch/json-schema-validator.git
+        GIT_TAG        2.3.0
+    )
+    FetchContent_MakeAvailable(nlohmann_json_schema_validator)
+else()
+    message(STATUS "Found nlohmann_json_schema_validator")
+endif()
+
 find_package(plog QUIET)
 if (NOT plog_FOUND)
     message(STATUS "plog not found, fetching...")
@@ -67,6 +80,7 @@ target_link_libraries(
     nek-core
     PUBLIC
     nlohmann_json
+    nlohmann_json_schema_validator
     Poco::Foundation
     plog
 )
@@ -75,6 +89,7 @@ target_include_directories(
     PUBLIC
     ../include
     ${Poco_INCLUDE_DIRS}
+    ${nlohmann_json_schema_validator_SOURCE_DIR}/src/nlohmann
 )
 target_link_directories(
     nek-core

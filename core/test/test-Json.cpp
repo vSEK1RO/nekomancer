@@ -63,6 +63,30 @@ namespace ENTRY
         EXPECT_EQ(A(Json::parse(A(10).stringify())).v, 10);
     }
 
+    TEST(ENTRY, validate)
+    {
+        auto schema = Json::parse(R"({
+            "name": "test-validation",
+            "properties": {
+                "prop": {
+                    "type": "string"
+                }
+            },
+            "type": "object",
+            "required": ["prop"]
+        })");
+
+        EXPECT_NO_THROW(Json::validate(Json::parse(R"({
+            "prop": "qqq"
+        })"),
+                                       schema));
+
+        EXPECT_ANY_THROW(Json::validate(Json::parse(R"({
+            "prop": 123
+        })"),
+                                        schema));
+    }
+
     struct B
     {
     };
