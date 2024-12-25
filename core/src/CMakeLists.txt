@@ -72,6 +72,7 @@ add_library(
     Component/Manager.cpp
     Component/Store.cpp
     Component/Interface.cpp
+    Component/Bitset.cpp
     Observer/Plog.cpp
     Observer/IObservable.cpp
 )

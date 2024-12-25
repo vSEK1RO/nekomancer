@@ -4,7 +4,7 @@ DIRS =\
 	build/components\
 	build/systems
 
-.PHONY: build release
+.PHONY: build release run clear
 
 build:
 	cmake -B $@
@@ -18,6 +18,12 @@ release: clear ${DIRS}
 		-exec sh -c 'for file; do mkdir -p "$(dirname "release/$file")"; cp "$file" "release/$file"; done' _ {} +
 	find $@ -type d \( -name "CMakeFiles" \) -exec rm -rf {} +
 	find $@ -type f \( -name "*.cmake" -o -name "Makefile" \) -exec rm -f {} +
+
+run:
+	cd release; ./nek-engine
+
+test:
+	cd build/core/test; ./nek-core-test
 
 clear:
 	rm -rf release/*

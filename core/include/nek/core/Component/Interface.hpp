@@ -17,6 +17,7 @@ namespace nek::core
     namespace Component
     {
         using Id = uint32_t;
+        using Name = std::string;
         using Construct = IComponent *(*)();
         using Destruct = void (*)(const IComponent *);
 

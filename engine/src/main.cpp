@@ -35,8 +35,8 @@ int main(int argc, char *argv[])
     try
     {
         auto &engine = nek::Engine::getInstance();
+        engine.addObserver(plog);
         engine
-            .addObserver(plog)
             .loadConfig(path)
             .loadComponents()
             .loadSystems();

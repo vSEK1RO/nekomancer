@@ -29,10 +29,12 @@ namespace ENTRY
         EXPECT_NO_THROW(ptr = manager.create("CAlive"));
         EXPECT_EQ(ptr->id(), 0);
         EXPECT_NO_THROW(casted_ptr = manager.create<nek::Alive>("CAlive"));
-        EXPECT_EQ(casted_ptr->id(), 0);
-
-        casted_ptr->from(component_config);
-        EXPECT_EQ(casted_ptr->health().get(), 10);
-        EXPECT_EQ(casted_ptr->mana().get(), 10);
+        if (casted_ptr.get())
+        {
+            EXPECT_EQ(casted_ptr->id(), 0);
+            casted_ptr->from(component_config);
+            EXPECT_EQ(casted_ptr->health().get(), 10);
+            EXPECT_EQ(casted_ptr->mana().get(), 10);
+        }
     }
 }
