@@ -1,5 +1,7 @@
-#include <argparse/argparse.hpp>
+#include "Engine.hpp"
+
 #include <iostream>
+#include <argparse/argparse.hpp>
 
 namespace nek::engine
 {
@@ -26,7 +28,22 @@ int main(int argc, char *argv[])
     {
         return nek::engine::error(err.what(), program);
     }
-
     std::string path = program.is_used("-p") ? program.get<std::string>("-p") : "nek-config.json";
-    std::cout << path << '\n';
+
+    auto &plog = nek::core::ObserverPlog::getInstance();
+    auto &engine = nek::Engine::getInstance();
+
+    try
+    {
+        engine.config_path.emplace(path);
+        engine
+            .addObserver(plog)
+            .loadConfig()
+            .loadComponents()
+            .loadSystems();
+    }
+    catch (const std::exception &e)
+    {
+        plog.log({Observable::Status::ERROR, std::string(e.what())});
+    }
 }

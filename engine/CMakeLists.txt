@@ -10,9 +10,12 @@ else()
     message(STATUS "Found argparse")
 endif()
 
+set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-result -O2")
+set(CMAKE_BUILD_TYPE Debug)
+
 add_executable(
     nek-engine
-    main.cpp
+    src/main.cpp
 )
 target_link_libraries(
     nek-engine

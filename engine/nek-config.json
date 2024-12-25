@@ -1,0 +1,7 @@
+{
+    "components": {
+        "CAlive": "../components/CAlive.so",
+        "CPicture": "../components/CPicture.so"
+    },
+    "systems": {}
+}

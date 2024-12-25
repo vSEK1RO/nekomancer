@@ -8,6 +8,8 @@
 
 namespace nek::core
 {
+    struct IObserver;
+
     namespace Observable
     {
         enum class Status : uint8_t
@@ -15,7 +17,7 @@ namespace nek::core
             NONE,
             INFO,
             WARNING,
-            FATAL,
+            ERROR,
         };
 
         using Message = std::pair<Status, std::string>;
@@ -24,6 +26,8 @@ namespace nek::core
     struct IObservable
     {
         Property<State<Observable::Message>> message{std::pair{Observable::Status::NONE, std::string()}};
+
+        virtual IObservable &addObserver(const IObserver &observer);
 
         virtual ~IObservable() = default;
     };

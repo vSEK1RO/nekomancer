@@ -17,8 +17,8 @@ namespace nek::core
         case Observable::Status::WARNING:
             PLOG_WARNING << value.second;
             return;
-        case Observable::Status::FATAL:
-            PLOG_FATAL << value.second;
+        case Observable::Status::ERROR:
+            PLOG_ERROR << value.second;
             return;
         default:
             return;

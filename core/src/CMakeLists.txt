@@ -73,6 +73,7 @@ add_library(
     Component/Store.cpp
     Component/Interface.cpp
     Observer/Plog.cpp
+    Observer/IObservable.cpp
 )
 target_link_libraries(
     nek-core
