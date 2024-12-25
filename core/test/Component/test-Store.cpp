@@ -32,6 +32,11 @@ namespace ENTRY
         store.addObserver(plog);
         store.from(store_config);
 
+        ComponentBitset bitset;
+        bitset.manager.emplace(&manager);
+        bitset.fromNames({"CAlive", "CPicture"});
+        EXPECT_TRUE(store.bitset() == bitset);
+
         auto &alive = store.get<nek::Alive>("CAlive");
         auto &picture = store.get<nek::Picture>("CPicture");
 

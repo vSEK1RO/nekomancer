@@ -16,8 +16,8 @@ namespace ENTRY
         b1.manager.emplace(&manager);
         b2.manager.emplace(&manager);
 
-        EXPECT_NO_THROW(b1.from({"CAlive", "CPicture"}));
-        EXPECT_NO_THROW(b2.from({"CAlive"}));
+        EXPECT_NO_THROW(b1.fromNames({"CAlive", "CPicture"}));
+        EXPECT_NO_THROW(b2.fromNames({"CAlive"}));
         EXPECT_FALSE(b1 == b2);
         EXPECT_FALSE(b2.has("CPicture"));
     }

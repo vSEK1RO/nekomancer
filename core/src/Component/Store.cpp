@@ -47,6 +47,7 @@ namespace nek::core
                 ptr->store.emplace(this);
                 ptr->mount();
                 _components[id] = ptr;
+                _bitset |= id;
             }
             catch (const std::exception &e)
             {

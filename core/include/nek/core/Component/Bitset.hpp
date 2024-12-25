@@ -19,7 +19,9 @@ namespace nek::core
         ComponentBitset(ComponentBitset &&rhs) noexcept = default;
         ComponentBitset &operator=(ComponentBitset &&rhs) noexcept = default;
 
-        ComponentBitset &from(const std::vector<Component::Name> &names);
+        ComponentBitset &fromNames(const std::vector<Component::Name> &names);
+        ComponentBitset &fromIds(const std::vector<Component::Id> &ids);
+        ComponentBitset &operator|=(const Component::Id &id);
         bool operator==(const ComponentBitset &rhs) const;
         bool has(const Component::Name &name) const;
 

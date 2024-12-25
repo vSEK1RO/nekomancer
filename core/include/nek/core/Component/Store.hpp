@@ -6,6 +6,7 @@
 #include <nek/core/Observer/IObservable.hpp>
 #include <nek/core/Component/Manager.hpp>
 #include <nek/core/Component/Interface.hpp>
+#include <nek/core/Component/Bitset.hpp>
 
 namespace nek::core
 {
@@ -45,6 +46,10 @@ namespace nek::core
             }
             return *casted_ptr;
         }
+        const ComponentBitset &bitset() const noexcept
+        {
+            return _bitset;
+        }
         bool has(const std::string &name_) const;
 
         ComponentStore &from(const Json::Value &config_) override;
@@ -54,5 +59,6 @@ namespace nek::core
 
     private:
         std::map<Component::Id, std::shared_ptr<IComponent>> _components;
+        ComponentBitset _bitset;
     };
 }

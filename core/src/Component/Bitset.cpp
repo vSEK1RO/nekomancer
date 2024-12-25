@@ -4,22 +4,24 @@
 
 namespace nek::core
 {
-    ComponentBitset &ComponentBitset::from(const std::vector<Component::Name> &names_)
+    ComponentBitset &ComponentBitset::fromNames(const std::vector<Component::Name> &names_)
+    {
+        std::vector<Component::Id> ids(names_.size(), Component::Id());
+        std::transform(names_.begin(), names_.end(), ids.begin(), [this](const Component::Name &name)
+                       { return manager()->id(name); });
+        return fromIds(ids);
+    }
+
+    ComponentBitset &ComponentBitset::fromIds(const std::vector<Component::Id> &ids_)
     {
         auto old_bitset = _bitset;
         try
         {
-            auto it = names_.begin();
-            auto it_end = names_.end();
+            auto it = ids_.begin();
+            auto it_end = ids_.end();
             while (it < it_end)
             {
-                auto &id = manager()->id(*it++);
-                if (_bitset.size() < id / 8 + 1)
-                {
-                    std::vector<std::bitset<8>> extend(id / 8 + 1 - _bitset.size(), std::bitset<8>());
-                    _bitset.insert(_bitset.end(), extend.begin(), extend.end());
-                }
-                _bitset[id / 8][id % 8] = true;
+                (*this) |= (*it++);
             }
         }
         catch (...)
@@ -27,6 +29,17 @@ namespace nek::core
             _bitset = std::move(old_bitset);
             throw;
         }
+        return *this;
+    }
+
+    ComponentBitset &ComponentBitset::operator|=(const Component::Id &id)
+    {
+        if (_bitset.size() < id / 8 + 1)
+        {
+            std::vector<std::bitset<8>> extend(id / 8 + 1 - _bitset.size(), std::bitset<8>());
+            _bitset.insert(_bitset.end(), extend.begin(), extend.end());
+        }
+        _bitset[id / 8][id % 8] = true;
         return *this;
     }
 
