@@ -1,7 +1,7 @@
 {
     "components": {
-        "CAlive": "../components/CAlive.so",
-        "CPicture": "../components/CPicture.so"
+        "CAlive": "./components/CAlive/CAlive.so",
+        "CPicture": "./components/CPicture/CPicture.so"
     },
     "systems": {}
 }

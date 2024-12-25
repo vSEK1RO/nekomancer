@@ -9,6 +9,7 @@
 
 namespace nek::core
 {
+    struct IEngine;
     struct IComponent;
     struct ComponentStore;
 
@@ -43,6 +44,7 @@ namespace nek::core
     struct IComponent : public IJsonable
     {
         Property<const Component::Id> id;
+        Property<const IEngine *> engine;
         Property<const ComponentStore *> store;
         Property<State<Component::Status>> status{Component::Status::CREATED};
 

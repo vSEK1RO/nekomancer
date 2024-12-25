@@ -16,8 +16,8 @@ namespace nek::core
      */
     struct IJsonable
     {
-        virtual IJsonable &from(const Json::Value &json) = 0;
-        virtual Json::Value toJson() const noexcept = 0;
+        virtual IJsonable &from(const Json::Value &json);
+        virtual Json::Value toJson() const noexcept;
 
         virtual IJsonable &parse(std::string_view sv);
         virtual std::string stringify() const noexcept;

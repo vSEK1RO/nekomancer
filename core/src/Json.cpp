@@ -14,6 +14,16 @@ namespace nek::core
         return Json::stringify(toJson());
     }
 
+    IJsonable &IJsonable::from(const Json::Value &)
+    {
+        return *this;
+    }
+
+    Json::Value IJsonable::toJson() const noexcept
+    {
+        return Json::Value();
+    }
+
     namespace Json
     {
         Value parse(std::string_view sv)

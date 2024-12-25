@@ -9,25 +9,20 @@ using namespace nek::core;
 
 namespace nek
 {
-    class Engine : public IObservable
+    class Engine : public IEngine
     {
     public:
-        Property<std::string> config_path;
-        Property<Json::Value> config;
-        Property<ComponentManager> components;
-        Property<ComponentManager> systems;
-
         Engine(const Engine &rhs) = delete;
         Engine &operator=(const Engine &rhs) = delete;
         Engine(Engine &&rhs) = default;
         Engine &operator=(Engine &&rhs) = default;
 
-        Engine &loadConfig()
+        Engine &loadConfig(const std::string &path_)
         {
-            std::ifstream file(config_path());
+            std::ifstream file(path_);
             if (!file.is_open())
             {
-                throw std::logic_error("failed to load engine config " + config_path());
+                throw std::logic_error("failed to load engine config " + path_);
             }
             std::stringstream buffer;
             buffer << file.rdbuf();
@@ -45,7 +40,7 @@ namespace nek
                 },
                 "required": ["components", "systems"]
             })"));
-            message().set({Observable::Status::INFO, "engine config loaded" + config_path()});
+            message().set({Observable::Status::INFO, "engine config loaded" + path_});
             return *this;
         }
 

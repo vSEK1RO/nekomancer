@@ -1,0 +1,16 @@
+add_library(
+    Saves
+    SHARED
+    Saves.cpp
+)
+target_link_libraries(
+    Saves
+    PRIVATE
+    nek-core
+)
+set_target_properties(
+    Saves
+    PROPERTIES
+    OUTPUT_NAME
+    "SSaves"
+)

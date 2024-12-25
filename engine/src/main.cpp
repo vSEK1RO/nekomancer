@@ -31,14 +31,13 @@ int main(int argc, char *argv[])
     std::string path = program.is_used("-p") ? program.get<std::string>("-p") : "nek-config.json";
 
     auto &plog = nek::core::ObserverPlog::getInstance();
-    auto &engine = nek::Engine::getInstance();
 
     try
     {
-        engine.config_path.emplace(path);
+        auto &engine = nek::Engine::getInstance();
         engine
             .addObserver(plog)
-            .loadConfig()
+            .loadConfig(path)
             .loadComponents()
             .loadSystems();
     }
