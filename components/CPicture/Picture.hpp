@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Picture.hpp"
+#include <nek/CPicture.hpp>
 #include <vector>
 #include <utility>
 #include <nek/core/Reactive.hpp>
@@ -9,18 +9,18 @@ using namespace nek::core;
 
 namespace nek
 {
-    struct CPicture : public Picture
+    struct Picture : public CPicture
     {
-        CPicture() = default;
+        Picture() = default;
 
-        CPicture(const Json::Value &config_);
+        Picture(const Json::Value &config_);
 
         void mount() override;
         void unmount() const noexcept override;
 
-        CPicture &from(const Json::Value &config_) override;
+        Picture &from(const Json::Value &config_) override;
         Json::Value toJson() const noexcept override;
 
-        virtual ~CPicture() override = default;
+        virtual ~Picture() override = default;
     };
 }

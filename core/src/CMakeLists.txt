@@ -87,6 +87,8 @@ target_include_directories(
     nek-core
     PUBLIC
     ../include
+    ../../components/include
+    ../../systems/include
 )
 target_include_directories(
     nek-core

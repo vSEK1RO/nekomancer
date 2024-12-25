@@ -6,11 +6,11 @@
 
 namespace nek
 {
-    struct Alive : public core::IComponent
+    struct CAlive : public core::IComponent
     {
         core::Property<core::State<int>> health;
         core::Property<core::State<int>> mana;
 
-        virtual ~Alive() override = default;
+        virtual ~CAlive() override = default;
     };
 }

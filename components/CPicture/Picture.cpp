@@ -1,17 +1,17 @@
-#include "CPicture.hpp"
-#include "Alive.hpp"
+#include "Picture.hpp"
+#include <nek/CAlive.hpp>
 
 namespace nek
 {
-    CPicture::CPicture(const Json::Value &config_)
+    Picture::Picture(const Json::Value &config_)
     {
         from(config_);
     }
 
-    void CPicture::mount()
+    void Picture::mount()
     {
         IComponent::mount();
-        Alive &alive = store()->get<Alive>("CAlive");
+        CAlive &alive = store()->get<CAlive>("CAlive");
         path.emplace([&alive]()
                      {
             if (alive.health().get() > 0)
@@ -24,17 +24,17 @@ namespace nek
             } });
     }
 
-    void CPicture::unmount() const noexcept
+    void Picture::unmount() const noexcept
     {
         IComponent::unmount();
     }
 
-    CPicture &CPicture::from(const Json::Value &config_)
+    Picture &Picture::from(const Json::Value &config_)
     {
         return *this;
     }
 
-    Json::Value CPicture::toJson() const noexcept
+    Json::Value Picture::toJson() const noexcept
     {
         return Json::Value();
     }
@@ -44,7 +44,7 @@ extern "C"
 {
     IComponent *constructComponent()
     {
-        return new nek::CPicture();
+        return new nek::Picture();
     }
     void destructComponent(const IComponent *component_ptr_) noexcept
     {

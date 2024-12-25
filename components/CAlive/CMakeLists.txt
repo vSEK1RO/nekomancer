@@ -1,0 +1,16 @@
+add_library(
+    Alive
+    SHARED
+    Alive.cpp
+)
+target_link_libraries(
+    Alive
+    PRIVATE
+    nek-core
+)
+set_target_properties(
+    Alive
+    PROPERTIES
+    OUTPUT_NAME
+    "CAlive"
+)

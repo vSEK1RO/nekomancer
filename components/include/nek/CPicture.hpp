@@ -7,10 +7,10 @@
 
 namespace nek
 {
-    struct Picture : public core::IComponent
+    struct CPicture : public core::IComponent
     {
         core::Property<core::Computed<std::string>> path;
 
-        virtual ~Picture() override = default;
+        virtual ~CPicture() override = default;
     };
 }

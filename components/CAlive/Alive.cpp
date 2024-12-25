@@ -1,20 +1,20 @@
-#include "CAlive.hpp"
+#include "Alive.hpp"
 
 namespace nek
 {
-    CAlive::CAlive(const Json::Value &config_)
+    Alive::Alive(const Json::Value &config_)
     {
         from(config_);
     }
 
-    CAlive &CAlive::from(const Json::Value &config_)
+    Alive &Alive::from(const Json::Value &config_)
     {
         health.emplace(config_.at("health"));
         mana.emplace(config_.at("mana"));
         return *this;
     }
 
-    Json::Value CAlive::toJson() const noexcept
+    Json::Value Alive::toJson() const noexcept
     {
         Json::Value json;
         json["health"] = Json::from(health());
@@ -27,7 +27,7 @@ extern "C"
 {
     IComponent *constructComponent()
     {
-        return new nek::CAlive();
+        return new nek::Alive();
     }
     void destructComponent(const IComponent *component_ptr_) noexcept
     {
