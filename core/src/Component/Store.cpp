@@ -6,7 +6,7 @@ namespace nek::core
 {
     bool ComponentStore::has(const std::string &name_) const
     {
-        return _manager->has(name_) && _components.contains(_manager->id(name_));
+        return manager()->has(name_) && _components.contains(manager()->id(name_));
     }
 
     ComponentStore &ComponentStore::from(const Json::Value &config_)
@@ -24,8 +24,9 @@ namespace nek::core
         {
             try
             {
-                id = _manager->id(name);
-                ptr = _manager->create(name);
+                id = manager()->id(name);
+                ptr = manager()->create(name);
+                ptr->addObservers(_observers);
                 ptr->from(config_json);
                 components[id] = ptr;
             }
@@ -49,10 +50,10 @@ namespace nek::core
             }
             catch (const std::exception &e)
             {
-                message().set({Observable::Status::WARNING, std::string("failed to mount component ") + _manager->name(id) + "\n" + e.what()});
+                message().set({Observable::Status::WARNING, std::string("failed to mount component ") + manager()->name(id) + "\n" + e.what()});
                 continue;
             }
-            message().set({Observable::Status::INFO, std::string("mounted component ") + _manager->name(id)});
+            message().set({Observable::Status::INFO, std::string("mounted component ") + manager()->name(id)});
         }
         return *this;
     }
@@ -62,7 +63,7 @@ namespace nek::core
         Json::Value json;
         for (const auto &[id, ptr] : _components)
         {
-            json[_manager->name(id)] = Json::from<IComponent>(*ptr);
+            json[manager()->name(id)] = Json::from<IComponent>(*ptr);
         }
         return json;
     }
@@ -74,7 +75,7 @@ namespace nek::core
             if (ptr.get())
             {
                 ptr->unmount();
-                message().set({Observable::Status::INFO, std::string("unmounted component ") + _manager->name(id)});
+                message().set({Observable::Status::INFO, std::string("unmounted component ") + manager()->name(id)});
             }
         }
     }

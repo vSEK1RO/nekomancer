@@ -27,8 +27,9 @@ namespace ENTRY
         manager.message().watch(plog.getWatcher());
         manager.from(manager_config);
 
-        ComponentStore store(&manager);
-        store.message().watch(plog.getWatcher());
+        ComponentStore store;
+        store.manager.emplace(&manager);
+        store.addObserver(plog);
         store.from(store_config);
 
         auto &alive = store.get<nek::Alive>("CAlive");

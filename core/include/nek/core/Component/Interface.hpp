@@ -6,6 +6,7 @@
 #include <nek/core/Json.hpp>
 #include <nek/core/State.hpp>
 #include <nek/core/Property.hpp>
+#include <nek/core/Observer/IObservable.hpp>
 
 namespace nek::core
 {
@@ -41,7 +42,7 @@ namespace nek::core
                                              })
     }
 
-    struct IComponent : public IJsonable
+    struct IComponent : public IJsonable, public IObservable
     {
         Property<const Component::Id> id;
         Property<const IEngine *> engine;

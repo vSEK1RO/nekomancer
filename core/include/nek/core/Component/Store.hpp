@@ -12,16 +12,15 @@ namespace nek::core
     class ComponentStore : public IJsonable, public IObservable
     {
     public:
-        ComponentStore() = delete;
+        Property<const ComponentManager *> manager;
+
+        ComponentStore() = default;
         ComponentStore(const ComponentStore &rhs) = delete;
         ComponentStore &operator=(const ComponentStore &rhs) = delete;
         ComponentStore(ComponentStore &&rhs) noexcept = default;
         ComponentStore &operator=(ComponentStore &&rhs) noexcept = default;
 
-        ComponentStore(const ComponentManager *manager_) noexcept
-            : _manager(manager_) {};
-        ComponentStore(const Json::Value &config_, const ComponentManager *manager_)
-            : _manager(manager_)
+        ComponentStore(const Json::Value &config_)
         {
             from(config_);
         }
@@ -29,7 +28,7 @@ namespace nek::core
         template <IsIComponent T = IComponent>
         T &get(const std::string &name_) const
         {
-            auto id = _manager->id(name_);
+            auto id = manager()->id(name_);
             IComponent *ptr;
             try
             {
@@ -54,7 +53,6 @@ namespace nek::core
         ~ComponentStore();
 
     private:
-        const ComponentManager *_manager;
         std::map<Component::Id, std::shared_ptr<IComponent>> _components;
     };
 }

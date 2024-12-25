@@ -27,8 +27,12 @@ namespace nek::core
     {
         Property<State<Observable::Message>> message{std::pair{Observable::Status::NONE, std::string()}};
 
-        virtual IObservable &addObserver(const IObserver &observer);
+        virtual IObservable &addObserver(const IObserver &observer_);
+        virtual IObservable &addObservers(const std::vector<const IObserver *> observers_);
 
         virtual ~IObservable() = default;
+
+    protected:
+        std::vector<const IObserver *> _observers;
     };
 }

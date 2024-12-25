@@ -47,8 +47,7 @@ namespace nek
         Engine &loadComponents()
         {
             components.emplace();
-            std::for_each(_observers.begin(), _observers.end(), [this](const IObserver *observer)
-                          { components().addObserver(*observer); });
+            components().addObservers(_observers);
             components().from(config().at("components"));
             return *this;
         }
@@ -56,16 +55,8 @@ namespace nek
         Engine &loadSystems()
         {
             systems.emplace();
-            std::for_each(_observers.begin(), _observers.end(), [this](const IObserver *observer)
-                          { systems().addObserver(*observer); });
+            systems().addObservers(_observers);
             systems().from(config().at("systems"));
-            return *this;
-        }
-
-        Engine &addObserver(const IObserver &observer) override
-        {
-            IObservable::addObserver(observer);
-            _observers.push_back(&observer);
             return *this;
         }
 
@@ -79,7 +70,5 @@ namespace nek
 
     private:
         Engine() = default;
-
-        std::vector<const IObserver *> _observers;
     };
 }
