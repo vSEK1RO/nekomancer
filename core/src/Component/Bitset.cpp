@@ -19,6 +19,7 @@ namespace nek::core
         {
             auto it = ids_.begin();
             auto it_end = ids_.end();
+            std::fill(_bitset.begin(), _bitset.end(), std::bitset<8>());
             while (it < it_end)
             {
                 (*this) |= (*it++);

@@ -75,6 +75,7 @@ add_library(
     Component/Bitset.cpp
     Observer/Plog.cpp
     Observer/IObservable.cpp
+    Entity/Base.cpp
 )
 target_link_libraries(
     nek-core

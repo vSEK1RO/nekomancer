@@ -40,23 +40,35 @@ namespace nek
                 },
                 "required": ["components", "systems"]
             })"));
-            message().set({Observable::Status::INFO, "engine config loaded" + path_});
+            message().set({Observable::Status::INFO, "engine config loaded " + path_});
             return *this;
         }
 
         Engine &loadComponents()
         {
-            components.emplace();
-            components().addObservers(_observers);
-            components().from(config().at("components"));
+            components_manager.emplace();
+            components_manager().addObservers(_observers);
+            components_manager().from(config().at("components"));
             return *this;
         }
 
         Engine &loadSystems()
         {
-            systems.emplace();
-            systems().addObservers(_observers);
-            systems().from(config().at("systems"));
+            auto systems_config = config().at("systems");
+
+            systems_manager.emplace();
+            systems_manager().addObservers(_observers);
+            systems_manager().from(systems_config);
+
+            for (const auto &[name, val] : systems_config.items())
+            {
+                systems_config[name] = Json::Value();
+            }
+
+            systems_store.emplace();
+            systems_store().manager.emplace(&systems_manager());
+            systems_store().addObservers(_observers);
+            systems_store().from(systems_config);
             return *this;
         }
 
