@@ -24,7 +24,7 @@ namespace nek
             } });
     }
 
-    void Picture::unmount() const noexcept
+    void Picture::unmount() noexcept
     {
         IComponent::unmount();
     }

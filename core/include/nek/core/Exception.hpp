@@ -35,7 +35,12 @@ namespace nek::core
         }
         const char *message() const noexcept
         {
-            return messages.at(_code).c_str();
+            auto it = messages.find(_code);
+            if (it != messages.end())
+            {
+                return it->second.c_str();
+            }
+            return "unknown exception";
         }
         Code code() const noexcept
         {

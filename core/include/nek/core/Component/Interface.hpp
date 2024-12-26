@@ -51,7 +51,7 @@ namespace nek::core
         Property<State<Component::Status>> status{Component::Status::CREATED};
 
         virtual void mount();
-        virtual void unmount() const noexcept;
+        virtual void unmount() noexcept;
         virtual ~IComponent();
     };
 

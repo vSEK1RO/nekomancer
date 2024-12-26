@@ -16,7 +16,7 @@ namespace nek
         CPicture(const Json::Value &config_);
 
         void mount() override;
-        void unmount() const noexcept override;
+        void unmount() noexcept override;
 
         CPicture &from(const Json::Value &config_) override;
         Json::Value toJson() const noexcept override;
