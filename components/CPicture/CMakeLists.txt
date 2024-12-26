@@ -1,0 +1,16 @@
+add_library(
+    Picture
+    SHARED
+    Picture.cpp
+)
+target_link_libraries(
+    Picture
+    PRIVATE
+    nek-core
+)
+set_target_properties(
+    Picture
+    PROPERTIES
+    OUTPUT_NAME
+    "CPicture"
+)
