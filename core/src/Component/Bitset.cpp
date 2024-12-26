@@ -1,6 +1,7 @@
 #include <nek/core/Component/Bitset.hpp>
 
 #include <algorithm>
+#include <iterator>
 
 namespace nek::core
 {
@@ -23,6 +24,17 @@ namespace nek::core
             while (it < it_end)
             {
                 (*this) |= (*it++);
+            }
+            // auto rit_last_zero = std::find(_bitset.rbegin(), _bitset.rend(), std::bitset<8>());
+            // std::erase(rit_last_zero.base(), _bitset.end()); WTF?????
+            std::make_signed_t<size_t> i = _bitset.size() - 1;
+            while (i >= 0 && _bitset[i] != 0)
+            {
+                i--;
+            }
+            if (i >= 0)
+            {
+                _bitset.erase(_bitset.begin() + i, _bitset.end());
             }
         }
         catch (...)
@@ -53,5 +65,24 @@ namespace nek::core
     {
         auto &id = manager()->id(name_);
         return _bitset[id / 8][id % 8];
+    }
+
+    bool ComponentBitset::has(const ComponentBitset &bitset) const
+    {
+        if (_bitset.size() < bitset._bitset.size())
+        {
+            return false;
+        }
+        auto _it = _bitset.begin();
+        auto it = bitset._bitset.begin();
+        auto end = bitset._bitset.end();
+        while (it < end)
+        {
+            if (!((~*it++) | (*_it++)).all())
+            {
+                return false;
+            }
+        }
+        return true;
     }
 }

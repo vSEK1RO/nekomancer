@@ -23,9 +23,9 @@ namespace ENTRY
     TEST(ENTRY, constructor_from_toJson)
     {
         Entity person;
-        person.store.emplace(&manager);
+        person.manager.emplace(&manager);
         person.from(store_config);
-        auto &alive = person.store().get<nek::Alive>("CAlive");
+        auto &alive = person.get<nek::Alive>("CAlive");
         EXPECT_EQ(alive.health().get(), 10);
     }
 }

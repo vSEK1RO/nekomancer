@@ -76,6 +76,7 @@ add_library(
     Observer/Plog.cpp
     Observer/IObservable.cpp
     Entity/Base.cpp
+    Entity/Store.cpp
 )
 target_link_libraries(
     nek-core

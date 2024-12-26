@@ -25,6 +25,9 @@ run:
 test:
 	cd build/core/test; ./nek-core-test
 
+gdb:
+	cd build/core/test; gdb ./nek-core-test
+
 clear:
 	rm -rf release/*
 

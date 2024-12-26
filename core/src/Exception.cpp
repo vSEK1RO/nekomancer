@@ -16,6 +16,7 @@ namespace nek::core
         {Code::PROPERTY_UNINITIALIZED, "property is uninitialized"},
         {Code::COMPONENT_DYNAMIC_CAST, "passed component cannot be casted to its real type"},
         {Code::COMPONENT_NOT_FOUND, "component with following name / id not found"},
+        {Code::ENTITY_NOT_EXIST, "entity with following id not exist"},
     };
     Exception::Exception(Code code, std::string_view description, const std::source_location &location)
     {

@@ -24,6 +24,7 @@ namespace nek::core
         ComponentBitset &operator|=(const Component::Id &id);
         bool operator==(const ComponentBitset &rhs) const;
         bool has(const Component::Name &name) const;
+        bool has(const ComponentBitset &bitset) const;
 
         ~ComponentBitset() = default;
 

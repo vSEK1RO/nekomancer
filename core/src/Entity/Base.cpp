@@ -13,7 +13,7 @@ namespace nek::core
         ComponentBitset bitset;
         bitset.manager.emplace(manager());
         bitset.fromNames(names_);
-        return bitset == _store.bitset();
+        return _store.bitset().has(bitset);
     }
 
     Entity &Entity::addObserver(const IObserver &observer_)
