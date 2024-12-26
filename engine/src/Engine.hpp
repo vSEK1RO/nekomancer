@@ -46,9 +46,13 @@ namespace nek
 
         Engine &loadComponents()
         {
-            components_manager.emplace();
-            components_manager().addObservers(_observers);
-            components_manager().from(config().at("components"));
+            component_manager.emplace();
+            component_manager().addObservers(_observers);
+            component_manager().from(config().at("components"));
+
+            entity_store.emplace();
+            entity_store().manager.emplace(&component_manager());
+            entity_store().addObservers(_observers);
             return *this;
         }
 
@@ -56,19 +60,19 @@ namespace nek
         {
             auto systems_config = config().at("systems");
 
-            systems_manager.emplace();
-            systems_manager().addObservers(_observers);
-            systems_manager().from(systems_config);
+            system_manager.emplace();
+            system_manager().addObservers(_observers);
+            system_manager().from(systems_config);
 
             for (const auto &[name, val] : systems_config.items())
             {
                 systems_config[name] = Json::Value();
             }
 
-            systems_store.emplace();
-            systems_store().manager.emplace(&systems_manager());
-            systems_store().addObservers(_observers);
-            systems_store().from(systems_config);
+            system_store.emplace();
+            system_store().manager.emplace(&system_manager());
+            system_store().addObservers(_observers);
+            system_store().from(systems_config);
             return *this;
         }
 
