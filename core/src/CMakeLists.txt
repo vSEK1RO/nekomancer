@@ -61,8 +61,6 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-result -O2")
 set(CMAKE_SHARED_LIBRARY_PREFIX "lib")
 set(CMAKE_STATIC_LIBRARY_PREFIX "lib")
 
-set(CMAKE_BUILD_TYPE Debug)
-
 add_library(
     nek-core
     SHARED
