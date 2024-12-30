@@ -45,6 +45,10 @@ namespace nek::core
             try
             {
                 ptr->store.emplace(this);
+                if (engine.get())
+                {
+                    ptr->engine.emplace(engine());
+                }
                 ptr->mount();
                 _components[id] = ptr;
                 _bitset |= id;

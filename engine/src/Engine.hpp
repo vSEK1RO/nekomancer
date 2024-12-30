@@ -2,6 +2,7 @@
 
 #include <string>
 #include <fstream>
+#include <filesystem>
 #include <stdexcept>
 #include <nek/core.hpp>
 
@@ -31,6 +32,9 @@ namespace nek
                 "name": "nek::Engine",
                 "type": "object",
                 "properties": {
+                    "autofind": {
+                        "type": "string"
+                    },
                     "components": {
                         "type": "object"
                     },
@@ -46,9 +50,11 @@ namespace nek
 
         Engine &loadComponents()
         {
+            auto components_config = _findPlugins("components");
+
             component_manager.emplace();
             component_manager().addObservers(_observers);
-            component_manager().from(config().at("components"));
+            component_manager().from(components_config);
 
             entity_store.emplace();
             entity_store().manager.emplace(&component_manager());
@@ -58,7 +64,7 @@ namespace nek
 
         Engine &loadSystems()
         {
-            auto systems_config = config().at("systems");
+            auto systems_config = _findPlugins("systems");
 
             system_manager.emplace();
             system_manager().addObservers(_observers);
@@ -71,6 +77,7 @@ namespace nek
 
             system_store.emplace();
             system_store().manager.emplace(&system_manager());
+            system_store().engine.emplace(this);
             system_store().addObservers(_observers);
             system_store().from(systems_config);
             return *this;
@@ -86,5 +93,28 @@ namespace nek
 
     private:
         Engine() = default;
+
+        Json::Value _findPlugins(const std::string &path_)
+        {
+            Json::Value ret;
+            if (config().contains("autofind"))
+            {
+                auto ext = Json::to<std::string>(config().at("autofind"));
+                for (const auto &entry : std::filesystem::recursive_directory_iterator(path_))
+                {
+                    if (entry.is_directory())
+                    {
+                        auto filename = entry.path().filename();
+                        auto plugin_path = std::filesystem::path(path_) / filename / (filename.string() + ext);
+                        ret[std::move(filename)] = Json::from<std::string>(std::move(plugin_path));
+                    }
+                }
+            }
+            else
+            {
+                ret = config().at("components");
+            }
+            return ret;
+        }
     };
 }
