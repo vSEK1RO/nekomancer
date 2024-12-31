@@ -44,7 +44,7 @@ namespace nek::core
     ComponentManager &ComponentManager::_from(const Json::Value &config_)
     {
         Json::validate(config_, Json::parse(R"({
-            "name": "ComponentManager",
+            "name": "nek::core::ComponentManager",
             "type": "object",
             "additionalProperties": {
                 "type": "string"

@@ -19,7 +19,18 @@ namespace nek
 
         void mount() override
         {
+            _th = std::thread(&Tick::cycle, this);
             IComponent::mount();
+        }
+
+        void unmount() noexcept override
+        {
+            _th.join();
+            IComponent::unmount();
+        }
+
+        void cycle()
+        {
             while (active())
             {
                 auto start_time = steady_clock::now();
@@ -36,12 +47,10 @@ namespace nek
             }
         }
 
-        void unmount() noexcept override
-        {
-            IComponent::unmount();
-        }
-
         virtual ~Tick() = default;
+
+    private:
+        std::thread _th;
     };
 }
 

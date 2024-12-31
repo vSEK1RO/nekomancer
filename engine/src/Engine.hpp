@@ -27,8 +27,9 @@ namespace nek
             }
             std::stringstream buffer;
             buffer << file.rdbuf();
-            config.emplace(Json::parse(buffer.str()));
-            Json::validate(config(), Json::parse(R"({
+
+            auto config_ = Json::parse(buffer.str());
+            Json::validate(config_, Json::parse(R"({
                 "name": "nek::Engine",
                 "type": "object",
                 "properties": {
@@ -44,6 +45,14 @@ namespace nek
                 },
                 "required": ["components", "systems"]
             })"));
+            config.emplace(std::move(config_));
+
+            auto slash_pos = path_.rfind('/');
+            if (slash_pos != std::string::npos)
+            {
+                _config_path = path_.substr(0, slash_pos + 1);
+            }
+
             message().set({Observable::Status::INFO, "engine config loaded " + path_});
             return *this;
         }
@@ -51,6 +60,11 @@ namespace nek
         Engine &loadComponents()
         {
             auto components_config = _findPlugins("components");
+
+            for (const auto &[name, val] : components_config.items())
+            {
+                components_config[name] = _config_path + Json::to<std::string>(val);
+            }
 
             component_manager.emplace();
             component_manager().addObservers(_observers);
@@ -65,6 +79,11 @@ namespace nek
         Engine &loadSystems()
         {
             auto systems_config = _findPlugins("systems");
+
+            for (const auto &[name, val] : systems_config.items())
+            {
+                systems_config[name] = _config_path + Json::to<std::string>(val);
+            }
 
             system_manager.emplace();
             system_manager().addObservers(_observers);
@@ -92,15 +111,17 @@ namespace nek
         }
 
     private:
+        std::string _config_path;
+
         Engine() = default;
 
         Json::Value _findPlugins(const std::string &path_)
         {
-            Json::Value ret;
+            Json::Value ret({});
             if (config().contains("autofind"))
             {
                 auto ext = Json::to<std::string>(config().at("autofind"));
-                for (const auto &entry : std::filesystem::recursive_directory_iterator(path_))
+                for (const auto &entry : std::filesystem::recursive_directory_iterator(_config_path + path_))
                 {
                     if (entry.is_directory())
                     {

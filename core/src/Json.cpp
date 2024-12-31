@@ -53,7 +53,7 @@ namespace nek::core
             }
             catch (const std::exception &e)
             {
-                throw Exception(Exception::JSON_VALIDATION, std::string(e.what()));
+                throw Exception(Exception::JSON_VALIDATION, Json::to<std::string>(schema.at("name")) + ": " + e.what());
             }
         }
     }
