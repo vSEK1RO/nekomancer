@@ -1,7 +1,9 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 #include <unordered_map>
+#include <Poco/SharedLibrary.h>
 #include <nek/core/Json.hpp>
 #include <nek/core/Exception.hpp>
 #include <nek/core/Property.hpp>
@@ -57,9 +59,12 @@ namespace nek::core
             return _config;
         }
 
+        ~ComponentManager();
+
     private:
         Json::Value _config;
         std::unordered_map<std::string, Component::Info> _infos;
+        std::vector<std::unique_ptr<Poco::SharedLibrary>> _libs;
 
         ComponentManager &_from(const Json::Value &config_);
     };
