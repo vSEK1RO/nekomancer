@@ -1,4 +1,3 @@
-set(CMAKE_BUILD_TYPE Debug)
 set(CMAKE_CXX_FLAGS "-frtti")
 
 find_package(GTest QUIET)

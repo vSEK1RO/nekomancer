@@ -3,12 +3,13 @@
 #include <nek/core/Json.hpp>
 #include <nek/core/Property.hpp>
 #include <nek/core/Observer/IObservable.hpp>
-#include <nek/core/Component/Manager.hpp>
-#include <nek/core/Component/Store.hpp>
-#include <nek/core/Entity/Store.hpp>
 
 namespace nek::core
 {
+    struct ComponentManager;
+    struct ComponentStore;
+    struct EntityStore;
+
     struct IEngine : public IJsonable, public IObservable
     {
         Property<Json::Value> config;

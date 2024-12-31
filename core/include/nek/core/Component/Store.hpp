@@ -3,6 +3,7 @@
 #include <map>
 #include <memory>
 #include <nek/core/Json.hpp>
+#include <nek/core/IEngine.hpp>
 #include <nek/core/Observer/IObservable.hpp>
 #include <nek/core/Component/Manager.hpp>
 #include <nek/core/Component/Interface.hpp>
@@ -14,6 +15,7 @@ namespace nek::core
     {
     public:
         Property<const ComponentManager *> manager;
+        Property<const IEngine *> engine;
 
         ComponentStore() = default;
         ComponentStore(const ComponentStore &rhs) = delete;

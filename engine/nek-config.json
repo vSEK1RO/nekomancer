@@ -1,7 +1,5 @@
 {
-    "components": {
-        "CAlive": "./components/CAlive/CAlive.so",
-        "CPicture": "./components/CPicture/CPicture.so"
-    },
+    "autofind": ".so",
+    "components": {},
     "systems": {}
 }

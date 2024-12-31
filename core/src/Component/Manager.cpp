@@ -1,7 +1,7 @@
 #include <nek/core/Component/Manager.hpp>
 
 #include <algorithm>
-#include <Poco/SharedLibrary.h>
+#include <filesystem>
 #include <nek/core/Exception.hpp>
 
 namespace nek::core
@@ -43,10 +43,13 @@ namespace nek::core
 
     ComponentManager &ComponentManager::_from(const Json::Value &config_)
     {
-        if (!config_.is_object())
-        {
-            throw Exception(Exception::JSON_PROPERTY, "'components' should be object of type\n{\t[name: string]: [path: string]\n}");
-        }
+        Json::validate(config_, Json::parse(R"({
+            "name": "nek::core::ComponentManager",
+            "type": "object",
+            "additionalProperties": {
+                "type": "string"
+            }
+        })"));
 
         Component::Id id = 0;
         std::unordered_map<std::string, Component::Info> infos;
@@ -56,19 +59,16 @@ namespace nek::core
             auto path = Json::to<std::string>(path_json);
             Component::Construct construct;
             Component::Destruct destruct;
+            auto lib = std::make_unique<Poco::SharedLibrary>();
             try
             {
-                Poco::SharedLibrary component(path);
-                construct = (Component::Construct)component.getSymbol("constructComponent");
-                destruct = (Component::Destruct)component.getSymbol("destructComponent");
-                if (!(construct && destruct))
-                {
-                    throw;
-                }
+                lib->load(path);
+                construct = (Component::Construct)lib->getSymbol("constructComponent");
+                destruct = (Component::Destruct)lib->getSymbol("destructComponent");
             }
             catch (const std::exception &e)
             {
-                message().set({Observable::Status::WARNING, std::string("failed to load component ") + name + "\n" + e.what()});
+                message().set({Observable::Status::WARNING, std::string("failed to load component ") + path + "\n" + e.what()});
                 continue;
             }
 
@@ -78,11 +78,28 @@ namespace nek::core
                 .destruct = destruct,
             };
 
-            infos[name] = info;
-            message().set({Observable::Status::INFO, std::string("loaded component ") + name});
+            _libs.emplace_back(std::move(lib));
+            infos[name] = std::move(info);
+            message().set({Observable::Status::INFO, std::string("loaded component ") + path});
         }
         _infos.clear();
         _infos = std::move(infos);
         return *this;
+    }
+
+    ComponentManager::~ComponentManager()
+    {
+        for (auto &lib : _libs)
+        {
+            if (lib->isLoaded())
+            {
+                lib->unload();
+                message().set({Observable::Status::INFO, std::string("unloaded component ") + lib->getPath()});
+            }
+            else
+            {
+                message().set({Observable::Status::WARNING, std::string("failed to unload component ") + lib->getPath()});
+            }
+        }
     }
 }

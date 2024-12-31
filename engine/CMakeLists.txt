@@ -11,7 +11,6 @@ else()
 endif()
 
 set(CMAKE_CXX_FLAGS "-Wall -Wextra -Werror -Wno-unused-result -O2")
-set(CMAKE_BUILD_TYPE Debug)
 
 add_executable(
     nek-engine

@@ -9,7 +9,7 @@ namespace nek::core
         status().set(Component::Status::MOUNTED);
     }
 
-    void IComponent::unmount() const noexcept
+    void IComponent::unmount() noexcept
     {
         status().set(Component::Status::UNMOUNTED);
     }

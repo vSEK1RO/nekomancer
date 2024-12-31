@@ -11,10 +11,13 @@ namespace nek::core
 
     ComponentStore &ComponentStore::from(const Json::Value &config_)
     {
-        if (!config_.is_object())
-        {
-            throw Exception(Exception::JSON_PROPERTY, "'components' should be object of type\n{\t[name: string]: [config: obj]\n}");
-        }
+        Json::validate(config_, Json::parse(R"({
+            "name": "nek::core::ComponentStore",
+            "type": "object",
+            "additionalProperties": {
+                "type": ["object", "null"]
+            }
+        })"));
 
         std::map<Component::Id, std::shared_ptr<IComponent>> components;
         Component::Id id;
@@ -45,6 +48,10 @@ namespace nek::core
             try
             {
                 ptr->store.emplace(this);
+                if (engine.get())
+                {
+                    ptr->engine.emplace(engine());
+                }
                 ptr->mount();
                 _components[id] = ptr;
                 _bitset |= id;

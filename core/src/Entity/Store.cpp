@@ -61,7 +61,7 @@ namespace nek::core
     EntityStore &EntityStore::from(const Json::Value &config_)
     {
         Json::validate(config_, Json::parse(R"({
-            "name": "EntityStore",
+            "name": "nek::core::EntityStore",
             "type": "array",
             "items": {
                 "type": "object"

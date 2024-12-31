@@ -1,0 +1,16 @@
+add_library(
+    STick
+    SHARED
+    Tick.cpp
+)
+target_link_libraries(
+    STick
+    PRIVATE
+    nek-core
+)
+set_target_properties(
+    STick
+    PROPERTIES
+    OUTPUT_NAME
+    "STick"
+)

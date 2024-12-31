@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <mutex>
 #include <nek/core/Reactive.hpp>
 #include <nek/core/Exception.hpp>
 
@@ -92,8 +93,17 @@ namespace nek::core
             Reactive::trackSelf();
             return _ptr.get();
         }
+        void lock()
+        {
+            _mutex.lock();
+        }
+        void unlock()
+        {
+            _mutex.unlock();
+        }
 
     private:
+        std::mutex _mutex;
         std::unique_ptr<T> _ptr;
     };
 }
