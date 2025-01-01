@@ -46,5 +46,8 @@ namespace ENTRY
         alive.health().reset();
         EXPECT_EQ(alive.health().get(), 0);
         EXPECT_EQ(picture.path().get(), "dead.png");
+
+        EXPECT_ANY_THROW(store.get<IComponent>());
+        EXPECT_EQ(&store.get<nek::Alive>(), &alive);
     }
 }

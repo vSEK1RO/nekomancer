@@ -19,7 +19,6 @@ namespace nek::core
             }
         })"));
 
-        std::map<Component::Id, std::shared_ptr<IComponent>> components;
         Component::Id id;
         std::shared_ptr<IComponent> ptr;
 
@@ -31,7 +30,7 @@ namespace nek::core
                 ptr = manager()->create(name);
                 ptr->addObservers(_observers);
                 ptr->from(config_json);
-                components[id] = ptr;
+                _components[id] = ptr;
             }
             catch (const std::exception &e)
             {
@@ -41,23 +40,21 @@ namespace nek::core
             message().set({Observable::Status::INFO, std::string("created component ") + name});
         }
 
-        _components.clear();
-
-        for (const auto &[id, ptr] : components)
+        for (const auto &[id, component] : _components)
         {
             try
             {
-                ptr->store.emplace(this);
+                component->store.emplace(this);
                 if (engine.get())
                 {
-                    ptr->engine.emplace(engine());
+                    component->engine.emplace(engine());
                 }
-                ptr->mount();
-                _components[id] = ptr;
+                component->mount();
                 _bitset |= id;
             }
             catch (const std::exception &e)
             {
+                _components.erase(id);
                 message().set({Observable::Status::WARNING, std::string("failed to mount component ") + manager()->name(id) + "\n" + e.what()});
                 continue;
             }
