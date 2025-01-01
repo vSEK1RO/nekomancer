@@ -66,9 +66,9 @@ namespace nek::core
                 construct = (Component::Construct)lib->getSymbol("constructComponent");
                 destruct = (Component::Destruct)lib->getSymbol("destructComponent");
             }
-            catch (const std::exception &e)
+            catch (const Poco::Exception &e)
             {
-                message().set({Observable::Status::WARNING, std::string("failed to load component ") + path + "\n" + e.what()});
+                message().set({Observable::Status::WARNING, std::string("failed to load component ") + path + "\n" + e.displayText()});
                 continue;
             }
 

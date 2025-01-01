@@ -48,6 +48,23 @@ namespace nek::core
             }
             return *casted_ptr;
         }
+        template <IsIComponent T>
+        T &get() const
+        {
+            T *casted_ptr;
+            if constexpr (!std::is_same_v<T, IComponent>)
+            {
+                for (const auto &pair : _components)
+                {
+                    casted_ptr = dynamic_cast<T *>(pair.second.get());
+                    if (casted_ptr)
+                    {
+                        return *casted_ptr;
+                    }
+                }
+            }
+            throw Exception(Exception::COMPONENT_NOT_FOUND, typeid(casted_ptr).name());
+        }
         const ComponentBitset &bitset() const noexcept
         {
             return _bitset;
